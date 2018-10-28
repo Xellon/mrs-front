@@ -1,0 +1,8 @@
+{
+    "lintOptions": {
+        "typeCheck": true,
+    },
+    "rules": {
+        "typedef": false,
+    }
+}

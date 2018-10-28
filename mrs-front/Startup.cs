@@ -20,7 +20,6 @@ namespace mrs_front
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -34,6 +33,7 @@ namespace mrs_front
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                //app.UseWebpackDevMiddleware();
             }
             else
             {
@@ -56,7 +56,8 @@ namespace mrs_front
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    //spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
                 }
             });
         }
