@@ -6,6 +6,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import "./App.scss";
 import Main from "./pages/Main";
 import Login from "./pages/Login";
+import { MovieList } from "./pages/MovieList";
+import { Register } from "./pages/register/Register";
 
 
 const styles = {
@@ -44,6 +46,18 @@ const LoginPageButton = withRouter(({history}) => (
   </Button>
 ));
 
+const RegisterPageButton = withRouter(({history}) => (
+  <Button 
+    color="inherit" 
+    style={styles.menuButton} 
+    onClick={() => {
+      history.push("/register")
+    }}
+  >
+    Register
+  </Button>
+));
+
 export default class App extends React.Component {
   public render(){
     return(
@@ -57,12 +71,15 @@ export default class App extends React.Component {
             </IconButton>
             <MainPageButton/>
             <LoginPageButton/>
+            <RegisterPageButton/>
             </Toolbar>
           </AppBar>
         </header>
         <>
           <Route exact path='/' component={Main} />
           <Route path='/login' component={Login} />
+          <Route path='/register' component={Register} />
+          <Route path='/movielist' component={MovieList} />
         </>
       </>
     );

@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using MrsFront.Model;
 
-namespace mrs_front
+namespace MrsFront
 {
     public class Startup
     {
@@ -20,6 +22,9 @@ namespace mrs_front
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddDbContext<SQLiteContext>(options => options.UseSqlite("Data Source=MRS.db"));
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
