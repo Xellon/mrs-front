@@ -24,7 +24,7 @@ export class MainInfo extends React.Component<MainInfoProps, MainInfoState> {
   }
 
   private handleChange = (type: keyof MainInfoForm) => {
-    return (e: React.ChangeEvent<HTMLInputElement>) => { 
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = this.readValue(type, e);
       const error = this.validate(type, value);
       this.setState({
@@ -35,36 +35,36 @@ export class MainInfo extends React.Component<MainInfoProps, MainInfoState> {
   }
 
   private readValue(type: keyof MainInfoForm, e: React.ChangeEvent<HTMLInputElement>) {
-    // if (type === "password") {
-    //   let value = e.target.value;
-    //   const hiddenLetters = e.target.value.lastIndexOf("*");
-    //   let val
-    // }
-    
-    return e.target.value;
+    let value = e.target.value;
+    if (type === "password") {
+      const hiddenLetters = value.lastIndexOf("*");
+      value = this.state[type].slice(0, hiddenLetters + 1) +
+        value.slice(hiddenLetters + 1);
+    }
+    return value;
   }
 
   private validate(type: keyof MainInfoState, value: string) {
-    switch(type) {
+    switch (type) {
       case "email": return this.validateEmail(value);
       case "password": return this.validatePassword(value);
     }
   }
 
   private validateEmail(email: string) {
-    if(!email.toLowerCase().match(/.*@.*\.[a-z]{2,6}$/g))
+    if (!email.toLowerCase().match(/.*@.*\.[a-z]{2,6}$/g))
       return "Email is wrong!";
     return undefined;
   }
 
   private validatePassword(password: string) {
-    if(password.length < 5)
+    if (password.length < 5)
       return "Password is shorter than 6 letters!";
-    if(password.length > 40)
+    if (password.length > 40)
       return "Password is too long!";
-    if(!password.match(/[0-9]/g))
+    if (!password.match(/[0-9]/g))
       return "Password does not have a number!";
-    if(!password.match(/[A-Z]/g))
+    if (!password.match(/[A-Z]/g))
       return "Password does not have an Uppercase letter!";
     return undefined;
   }
@@ -85,10 +85,10 @@ export class MainInfo extends React.Component<MainInfoProps, MainInfoState> {
   }
 
   public render() {
-    return(
+    return (
       <>
         <div>
-          <TextField 
+          <TextField
             label="Email"
             required
             margin="normal"
@@ -97,9 +97,9 @@ export class MainInfo extends React.Component<MainInfoProps, MainInfoState> {
             helperText={this.state.emailError}
             error={!!this.state.emailError}
           />
-        </div> 
+        </div>
         <div>
-          <TextField 
+          <TextField
             label="Password"
             required
             margin="normal"
@@ -108,8 +108,8 @@ export class MainInfo extends React.Component<MainInfoProps, MainInfoState> {
             helperText={this.state.passwordError}
             error={!!this.state.passwordError}
           />
-        </div>  
+        </div>
       </>
-      );
+    );
   }
 }

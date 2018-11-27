@@ -1,11 +1,11 @@
 import * as React from "react";
-import {Route, withRouter} from "react-router"
+import { Route, withRouter } from "react-router"
 import { AppBar, Toolbar, Typography, CssBaseline, IconButton, Button } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
 
 import "./App.scss";
 import Main from "./pages/Main";
-import Login from "./pages/Login";
+import Login from "./pages/login/Login";
 import { MovieList } from "./pages/MovieList";
 import { Register } from "./pages/register/Register";
 
@@ -20,10 +20,10 @@ const styles = {
   },
 };
 
-const MainPageButton = withRouter(({history}) => (
-  <Button 
-    color="inherit" 
-    style={styles.grow} 
+const MainPageButton = withRouter(({ history }) => (
+  <Button
+    color="inherit"
+    style={styles.grow}
     onClick={() => {
       history.push("/")
     }}
@@ -34,10 +34,10 @@ const MainPageButton = withRouter(({history}) => (
   </Button>
 ));
 
-const LoginPageButton = withRouter(({history}) => (
-  <Button 
-    color="inherit" 
-    style={styles.menuButton} 
+const LoginPageButton = withRouter(({ history }) => (
+  <Button
+    color="inherit"
+    style={styles.menuButton}
     onClick={() => {
       history.push("/login")
     }}
@@ -46,10 +46,10 @@ const LoginPageButton = withRouter(({history}) => (
   </Button>
 ));
 
-const RegisterPageButton = withRouter(({history}) => (
-  <Button 
-    color="inherit" 
-    style={styles.menuButton} 
+const RegisterPageButton = withRouter(({ history }) => (
+  <Button
+    color="inherit"
+    style={styles.menuButton}
     onClick={() => {
       history.push("/register")
     }}
@@ -59,19 +59,19 @@ const RegisterPageButton = withRouter(({history}) => (
 ));
 
 export default class App extends React.Component {
-  public render(){
-    return(
+  public render() {
+    return (
       <>
-        <CssBaseline/>
+        <CssBaseline />
         <header>
           <AppBar position="static">
             <Toolbar>
-            <IconButton color="inherit" aria-label="Menu">
-              <MenuIcon />
-            </IconButton>
-            <MainPageButton/>
-            <LoginPageButton/>
-            <RegisterPageButton/>
+              <IconButton color="inherit" aria-label="Menu">
+                <MenuIcon />
+              </IconButton>
+              <MainPageButton />
+              <LoginPageButton />
+              <RegisterPageButton />
             </Toolbar>
           </AppBar>
         </header>

@@ -1,7 +1,8 @@
 import * as React from "react";
 import { MainInfo, MainInfoForm } from "./MainInfo";
-import { Button } from "@material-ui/core";
+import { Button, Paper, Typography } from "@material-ui/core";
 import CustomEvent from "../../common/CustomEvent";
+import Movies from "./Movies";
 
 export interface RegisterState {
   mainInfo?: MainInfoForm;
@@ -11,7 +12,7 @@ export class Register extends React.Component<{}, RegisterState> {
   public _submitEvent = new CustomEvent();
 
   private _retrieveMainInfo = (mainInfo: MainInfoForm) => {
-    this.setState({mainInfo});
+    this.setState({ mainInfo });
   }
 
   private _onClick = () => {
@@ -19,18 +20,22 @@ export class Register extends React.Component<{}, RegisterState> {
   }
 
   public render() {
-    return(
-      <main>
-        <h1>Register</h1>
-        <h2>Main info</h2>
-        <MainInfo 
-          submitEvent={this._submitEvent} 
-          onSubmit={this._retrieveMainInfo}
-        />
-        <Button 
-          variant="contained" 
+    return (
+      <main style={{ maxWidth: 600, margin: "auto" }}>
+        <Typography variant="headline" style={{ paddingBottom: 10 }} align="center">Register</Typography>
+        <Paper style={{ padding: 10 }} >
+          <Typography variant="title">Main info</Typography>
+          <MainInfo
+            submitEvent={this._submitEvent}
+            onSubmit={this._retrieveMainInfo}
+          />
+        </Paper>
+        <Movies />
+        <Button
+          variant="contained"
           color="primary"
           onClick={this._onClick}
+          style={{ margin: "15px auto", display: "block" }}
         >
           Submit
         </Button>
