@@ -40,31 +40,31 @@ export default class Movies extends React.Component<Props, State> {
   private createNewId() {
     return ++this._lastId;
   }
-  
+
   private loadMovies() {
     // Load from server
-    this.setState({movieData: movieList});
+    this.setState({ movieData: movieList });
   }
 
   private _onMovieDelete = (id: number) => {
     const movies = this.state.movies;
     movies.delete(id);
-    this.setState({movies});
+    this.setState({ movies });
   }
 
   private _onAddNewMovie = () => {
     const movies = this.state.movies;
     const id = this.createNewId();
-    movies.set(id, 
-      <UserMovie 
-        key={id} 
-        id={id} 
-        onSubmit={this.props.onSubmit} 
+    movies.set(id,
+      <UserMovie
+        key={"user_movie_" + id}
+        id={id}
+        onSubmit={this.props.onSubmit}
         submitEvent={this.props.submitEvent}
         onDelete={this._onMovieDelete}
         movieList={this.state.movieData}
       />)
-    this.setState({movies});
+    this.setState({ movies });
   }
 
   public componentDidMount() {
@@ -76,17 +76,17 @@ export default class Movies extends React.Component<Props, State> {
       <Paper style={{ margin: "5px 0", padding: 10 }}>
         <Typography variant="title">Movies</Typography>
         <List>
-          {this.state.movieData 
-            ? 
+          {this.state.movieData
+            ?
             <AddMovieButton onClick={this._onAddNewMovie} />
-            : 
+            :
             <ListItem>
-              <CircularProgress/>
+              <CircularProgress />
             </ListItem>}
           {Array.from(this.state.movies.values(), movie => {
             return (
               <>
-                <Divider/>
+                <Divider />
                 {movie}
               </>
             );
