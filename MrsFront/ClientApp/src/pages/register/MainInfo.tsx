@@ -7,29 +7,33 @@ export interface MainInfoForm {
   password: string;
 }
 
-export interface MainInfoProps {
+export interface Props {
   submitEvent: CustomEvent;
   onSubmit: (mainInfo: MainInfoForm) => void;
 }
 
-export interface MainInfoState extends MainInfoForm {
+export interface State extends MainInfoForm {
   emailError?: string;
   passwordError?: string;
 }
 
-export class MainInfo extends React.Component<MainInfoProps, MainInfoState> {
-  public readonly state: MainInfoState = {
+export class MainInfo extends React.Component<Props, State> {
+  public readonly state: State = {
     email: "",
     password: "",
+  }
+
+  constructor(props: Props) {
+    super(props);
+    props.submitEvent.register(this._onSubmit);
   }
 
   private handleChange = (type: keyof MainInfoForm) => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = this.readValue(type, e);
-      const error = this.validate(type, value);
       this.setState({
         [type]: value,
-        [type + "Error"]: error,
+        [type + "Error"]: undefined,
       } as Pick<MainInfoForm, keyof MainInfoForm>);
     };
   }
@@ -44,11 +48,18 @@ export class MainInfo extends React.Component<MainInfoProps, MainInfoState> {
     return value;
   }
 
-  private validate(type: keyof MainInfoState, value: string) {
-    switch (type) {
-      case "email": return this.validateEmail(value);
-      case "password": return this.validatePassword(value);
+  private validate(type: keyof MainInfoForm) {
+    let error: string | undefined;
+    switch(type) {
+      case "email":
+        error = this.validateEmail(this.state.email);
+        break;
+      case 'password':
+        error = this.validatePassword(this.state.password);
+        break;
     }
+    this.setState({[type + "Error"]: error} as any)
+    return !error;
   }
 
   private validateEmail(email: string) {
@@ -70,10 +81,15 @@ export class MainInfo extends React.Component<MainInfoProps, MainInfoState> {
   }
 
   private _onSubmit = () => {
+    if(!this.validate("email") || !this.validate("password"))
+      return false;
+      
     this.props.onSubmit({
       email: this.state.email,
       password: this.state.password,
     });
+
+    return true;
   }
 
   public componentDidMount() {
