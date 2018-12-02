@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TextField, ListItemText, ListItem, Avatar, ListItemAvatar, IconButton, Icon, CardMedia } from "@material-ui/core";
+import { TextField, ListItemText, ListItem, ListItemAvatar, IconButton } from "@material-ui/core";
 import Event from "../../common/CustomEvent";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Autocomplete, { AutocompleteItem } from "../../components/Autocomplete";
@@ -9,19 +9,23 @@ export interface UserMovieForm {
   rating?: number;
 }
 
+interface Movie {
+  title: string;
+  imageUrl: string;
+}
+
 interface Props {
   id: number;
   onDelete: (id: number) => void;
   submitEvent: Event;
   onSubmit: (info: UserMovieForm) => void;
-  movieList: { title: string, imageUrl: string }[];
+  movieList: Movie[];
 }
 
-interface State extends UserMovieForm {
-}
+type State = UserMovieForm;
 
 export default class UserMovie extends React.Component<Props, State> {
-  public readonly state: State = {}
+  public readonly state: State = {};
 
   constructor(props: Props) {
     super(props);
@@ -69,6 +73,7 @@ export default class UserMovie extends React.Component<Props, State> {
             height="120px"
             src={this.state.movieIndex !== undefined
               ? this.props.movieList[this.state.movieIndex].imageUrl
+              // tslint:disable-next-line
               : "https://is4-ssl.mzstatic.com/image/thumb/Video122/v4/02/cf/bc/02cfbc57-8dcb-09f7-d1d9-67da6e94d347/pr_source.lsr/268x0w.png"}
           />
         </ListItemAvatar>

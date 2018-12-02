@@ -22,7 +22,7 @@ interface State {
 export default class Autocomplete extends React.Component<Props> {
   public readonly state: State = {
     input: "",
-  }
+  };
 
   private _onAutocomplete = (selectedItem: AutocompleteItem) => {
     this.setState({ selectedItem: selectedItem.value });
@@ -33,6 +33,34 @@ export default class Autocomplete extends React.Component<Props> {
     return item.value;
   }
 
+  private renderTextField = (controllerState: ControllerStateAndHelpers<AutocompleteItem>) => {
+    return (
+      <div>
+        <TextField {...{ ...controllerState.getInputProps(), ...this.props.textFieldProps }} />
+        <ul {...controllerState.getMenuProps()}>
+          {controllerState.isOpen
+            ?
+            this.props.items
+              .filter(item => !controllerState.inputValue
+                || item.value.toLocaleLowerCase().includes(controllerState.inputValue.toLocaleLowerCase()))
+              .map((item, index) => (
+                <li
+                  {...controllerState.getItemProps({
+                    key: item.value,
+                    index,
+                    item,
+                  })}
+                >
+                  {item.value}
+                </li>
+              ))
+            : undefined
+          }
+        </ul>
+      </div>
+    );
+  }
+
   public render() {
     return (
       <Downshift
@@ -40,31 +68,7 @@ export default class Autocomplete extends React.Component<Props> {
         selectedItem={this.state.selectedItem}
         itemToString={this._itemToString}
       >
-        {(controllerState: ControllerStateAndHelpers<AutocompleteItem>) => (
-          <div>
-            <TextField {...{ ...controllerState.getInputProps(), ...this.props.textFieldProps }} />
-            <ul {...controllerState.getMenuProps()}>
-              {controllerState.isOpen
-                ?
-                this.props.items
-                  .filter(item => !controllerState.inputValue
-                    || item.value.toLocaleLowerCase().includes(controllerState.inputValue.toLocaleLowerCase()))
-                  .map((item, index) => (
-                    <li
-                      {...controllerState.getItemProps({
-                        key: item.value,
-                        index,
-                        item,
-                      })}
-                    >
-                      {item.value}
-                    </li>
-                  ))
-                : undefined
-              }
-            </ul>
-          </div>
-        )}
+        {this.renderTextField}
       </Downshift>
     );
   }

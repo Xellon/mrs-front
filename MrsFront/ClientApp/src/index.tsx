@@ -5,11 +5,11 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 
 const rootElement = document.getElementById("root");
-const baseUrl = document.getElementsByTagName('html')[0].getAttribute('href');
+const baseUrl = document.getElementsByTagName("html")[0].getAttribute("href");
 
 ReactDOM.render(
     <BrowserRouter basename={baseUrl}>
-        <App/>
+        <App />
     </BrowserRouter>
     , rootElement);
 

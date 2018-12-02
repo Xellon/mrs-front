@@ -1,14 +1,13 @@
 import * as React from "react";
-import { Route, withRouter } from "react-router"
+import { Route, withRouter } from "react-router";
 import { AppBar, Toolbar, Typography, CssBaseline, IconButton, Button } from "@material-ui/core";
-import MenuIcon from '@material-ui/icons/Menu';
-
-import "./App.scss";
+import MenuIcon from "@material-ui/icons/Menu";
 import Main from "./pages/Main";
 import Login from "./pages/login/Login";
 import { MovieList } from "./pages/MovieList";
 import { Register } from "./pages/register/Register";
 
+import "./App.scss";
 
 const styles = {
   grow: {
@@ -20,13 +19,17 @@ const styles = {
   },
 };
 
+function createOnNavigationClick(history: any, path: string) {
+  return () => {
+    history.push(path);
+  };
+}
+
 const MainPageButton = withRouter(({ history }) => (
   <Button
     color="inherit"
     style={styles.grow}
-    onClick={() => {
-      history.push("/")
-    }}
+    onClick={createOnNavigationClick(history, "/")}
   >
     <Typography variant="h6" color="inherit">
       Movie Recommendation Service
@@ -38,9 +41,7 @@ const LoginPageButton = withRouter(({ history }) => (
   <Button
     color="inherit"
     style={styles.menuButton}
-    onClick={() => {
-      history.push("/login")
-    }}
+    onClick={createOnNavigationClick(history, "/login")}
   >
     Login
   </Button>
@@ -50,9 +51,7 @@ const RegisterPageButton = withRouter(({ history }) => (
   <Button
     color="inherit"
     style={styles.menuButton}
-    onClick={() => {
-      history.push("/register")
-    }}
+    onClick={createOnNavigationClick(history, "/register")}
   >
     Register
   </Button>
@@ -76,10 +75,10 @@ export default class App extends React.Component {
           </AppBar>
         </header>
         <>
-          <Route exact path='/' component={Main} />
-          <Route path='/login' component={Login} />
-          <Route path='/register' component={Register} />
-          <Route path='/movielist' component={MovieList} />
+          <Route exact path="/" component={Main} />
+          <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
+          <Route path="/movielist" component={MovieList} />
         </>
       </>
     );

@@ -35,7 +35,7 @@ export default class Movies extends React.Component<Props, State> {
 
   public readonly state: State = {
     movies: new Map<number, React.ReactNode>(),
-  }
+  };
 
   private createNewId() {
     return ++this._lastId;
@@ -55,7 +55,7 @@ export default class Movies extends React.Component<Props, State> {
   private _onAddNewMovie = () => {
     const movies = this.state.movies;
     const id = this.createNewId();
-    movies.set(id,
+    movies.set(id, (
       <UserMovie
         key={"user_movie_" + id}
         id={id}
@@ -63,7 +63,7 @@ export default class Movies extends React.Component<Props, State> {
         submitEvent={this.props.submitEvent}
         onDelete={this._onMovieDelete}
         movieList={this.state.movieData}
-      />)
+      />));
     this.setState({ movies });
   }
 
@@ -74,7 +74,7 @@ export default class Movies extends React.Component<Props, State> {
   public render() {
     return (
       <Paper style={{ margin: "5px 0", padding: 10 }}>
-        <Typography variant="title">Movies</Typography>
+        <Typography variant="h6">Movies</Typography>
         <List>
           {this.state.movieData
             ?

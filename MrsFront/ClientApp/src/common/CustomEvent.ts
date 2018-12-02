@@ -1,9 +1,9 @@
-type EventCallback<TEventArgs> = (sender: Object, args: TEventArgs) => boolean;
+type EventCallback<TEventArgs> = (sender: object, args: TEventArgs) => boolean;
 
 export default class CustomEvent<TEventArgs = any> {
   private _callbackList = new Array<EventCallback<TEventArgs>>();
 
-  public notify(sender: Object, args: TEventArgs) {
+  public notify(sender: object, args: TEventArgs) {
     let allSuccessfull = true;
     for (const callback of this._callbackList) {
       allSuccessfull = allSuccessfull && callback(sender, args);

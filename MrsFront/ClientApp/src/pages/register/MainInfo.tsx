@@ -21,7 +21,7 @@ export class MainInfo extends React.Component<Props, State> {
   public readonly state: State = {
     email: "",
     password: "",
-  }
+  };
 
   constructor(props: Props) {
     super(props);
@@ -50,15 +50,15 @@ export class MainInfo extends React.Component<Props, State> {
 
   private validate(type: keyof MainInfoForm) {
     let error: string | undefined;
-    switch(type) {
+    switch (type) {
       case "email":
         error = this.validateEmail(this.state.email);
         break;
-      case 'password':
+      case "password":
         error = this.validatePassword(this.state.password);
         break;
     }
-    this.setState({[type + "Error"]: error} as any)
+    this.setState({ [type + "Error"]: error } as Pick<MainInfoForm, keyof MainInfoForm>);
     return !error;
   }
 
@@ -81,9 +81,9 @@ export class MainInfo extends React.Component<Props, State> {
   }
 
   private _onSubmit = () => {
-    if(!this.validate("email") || !this.validate("password"))
+    if (!this.validate("email") || !this.validate("password"))
       return false;
-      
+
     this.props.onSubmit({
       email: this.state.email,
       password: this.state.password,
