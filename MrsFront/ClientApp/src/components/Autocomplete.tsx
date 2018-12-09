@@ -1,6 +1,6 @@
 import * as React from "react";
 import Downshift, { ControllerStateAndHelpers } from "downshift";
-import { TextField } from "@material-ui/core";
+import { TextField, Paper } from "@material-ui/core";
 import { TextFieldProps } from "@material-ui/core/TextField";
 
 export interface AutocompleteItem {
@@ -37,26 +37,28 @@ export default class Autocomplete extends React.Component<Props> {
     return (
       <div>
         <TextField {...{ ...controllerState.getInputProps(), ...this.props.textFieldProps }} />
-        <ul {...controllerState.getMenuProps()}>
-          {controllerState.isOpen
-            ?
-            this.props.items
-              .filter(item => !controllerState.inputValue
-                || item.value.toLocaleLowerCase().includes(controllerState.inputValue.toLocaleLowerCase()))
-              .map((item, index) => (
-                <li
-                  {...controllerState.getItemProps({
-                    key: item.value,
-                    index,
-                    item,
-                  })}
-                >
-                  {item.value}
-                </li>
-              ))
-            : undefined
-          }
-        </ul>
+        <Paper>
+          <ul {...controllerState.getMenuProps({className: "autocomplete-suggestion-list"})}>
+            {controllerState.isOpen
+              ?
+              this.props.items
+                .filter(item => !controllerState.inputValue
+                  || item.value.toLocaleLowerCase().includes(controllerState.inputValue.toLocaleLowerCase()))
+                .map((item, index) => (
+                  <li
+                    {...controllerState.getItemProps({
+                      key: item.value,
+                      index,
+                      item,
+                    })}
+                  >
+                    {item.value}
+                  </li>
+                ))
+              : undefined
+            }
+          </ul>
+        </Paper>
       </div>
     );
   }

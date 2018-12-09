@@ -8,6 +8,7 @@ import { MovieList } from "./pages/MovieList";
 import { Register } from "./pages/register/Register";
 
 import "./App.scss";
+import Welcome from "./pages/Welcome";
 
 const styles = {
   grow: {
@@ -57,7 +58,13 @@ const RegisterPageButton = withRouter(({ history }) => (
   </Button>
 ));
 
-export default class App extends React.Component {
+interface State {
+  userSignedIn: boolean;
+}
+
+export default class App extends React.Component<{}, State> {
+  public readonly state: State = { userSignedIn: true }
+
   public render() {
     return (
       <>
@@ -75,10 +82,17 @@ export default class App extends React.Component {
           </AppBar>
         </header>
         <>
-          <Route exact path="/" component={Main} />
+          {this.state.userSignedIn
+            ?  
+            <>
+              <Route exact path="/" component={Main} />
+              <Route path="/movielist" component={MovieList} />
+            </>
+            :
+            <Route exact path="/" component={Welcome} />
+          }
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <Route path="/movielist" component={MovieList} />
         </>
       </>
     );

@@ -1,19 +1,26 @@
 import * as React from "react";
-import { Paper } from "@material-ui/core";
 import "./Main.scss";
+import { Button, List } from "@material-ui/core";
+import SuggestedMovie from "../components/SuggestedMovie";
 
 export default class Main extends React.Component {
 
-    public render() {
-        return(
-            <main>
-                <Paper style={{padding: "5px"}}>
-                    <h1>Welcome to Movie Recommendation service</h1>
-                    <p>
-                        Hello world!
-                    </p>
-                </Paper>
-            </main>
-        );
-    }
+  public render() {
+    return (
+      <main>
+        <Button>
+          Request a movie
+                </Button>
+        <div>
+          <h3>Last suggested movies</h3>
+          <List>
+            <SuggestedMovie title="Movie A" possibleRating={10} />
+            <SuggestedMovie title="Movie B" possibleRating={9.5} />
+            <SuggestedMovie title="Movie C" possibleRating={9.4} />
+            <SuggestedMovie title="Movie D" possibleRating={8} />
+          </List>
+        </div>
+      </main>
+    );
+  }
 }
