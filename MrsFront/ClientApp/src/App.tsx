@@ -6,9 +6,11 @@ import Main from "./pages/Main";
 import Login from "./pages/login/Login";
 import { MovieList } from "./pages/MovieList";
 import { Register } from "./pages/register/Register";
+import { RequestMovie } from "./pages/requestmovie/RequestMovie";
+import Welcome from "./pages/Welcome";
+import { Authentication, UserType } from "./common/Authentication";
 
 import "./App.scss";
-import Welcome from "./pages/Welcome";
 
 const styles = {
   grow: {
@@ -65,6 +67,34 @@ interface State {
 export default class App extends React.Component<{}, State> {
   public readonly state: State = { userSignedIn: true }
 
+  private getRoutesForUser() {
+    const user = Authentication.getSignedInUser();
+
+    let routes: React.ReactNode = (
+      <>
+
+      </>
+    );
+
+    if (!user) {
+
+    }
+
+    {
+      this.state.userSignedIn
+      ?
+      <>
+        <Route exact path="/" component={Main} />
+        <Route path="/movielist" component={MovieList} />
+        <Route path="/requestmovie" component={RequestMovie} />
+      </>
+      :
+      <Route exact path="/" component={Welcome} />
+    }
+    <Route path="/login" component={Login} />
+      <Route path="/register" component={Register} />
+  }
+
   public render() {
     return (
       <>
@@ -82,17 +112,7 @@ export default class App extends React.Component<{}, State> {
           </AppBar>
         </header>
         <>
-          {this.state.userSignedIn
-            ?  
-            <>
-              <Route exact path="/" component={Main} />
-              <Route path="/movielist" component={MovieList} />
-            </>
-            :
-            <Route exact path="/" component={Welcome} />
-          }
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
+          {this.getRoutesForUser()}
         </>
       </>
     );

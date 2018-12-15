@@ -45,8 +45,11 @@ namespace MrsFront
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            if (!env.IsDevelopment())
+            {
+                app.UseStaticFiles();
+                app.UseSpaStaticFiles();
+            }
 
             app.UseMvc(routes =>
             {

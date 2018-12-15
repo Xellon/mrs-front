@@ -21,5 +21,34 @@ namespace MrsFront.Controllers
         {
             return _context.Tags.ToList();
         }
+
+        [HttpGet("[action]")]
+        public IEnumerable<Model.RecommendedMovie> RecommendedMovies()
+        {
+            // return _context.RecommendedMovies.ToList();
+            return new List<Model.RecommendedMovie>()
+            {
+                new Model.RecommendedMovie()
+                {
+                    Movie = new Model.Movie()
+                    {
+                        Title = "Boy adventures",
+                        AverageRating = 5
+                    },
+                    PossibleRating = 9
+                    
+                },
+                new Model.RecommendedMovie()
+                {
+                    Movie = new Model.Movie()
+                    {
+                        Title = "Tiny avengers",
+                        AverageRating = 9
+                    },
+                    PossibleRating = 10
+
+                }
+            };
+        }
     }
 }
