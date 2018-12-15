@@ -3,15 +3,12 @@ import { TextField, ListItemText, ListItem, ListItemAvatar, IconButton } from "@
 import Event from "../../common/CustomEvent";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Autocomplete, { AutocompleteItem } from "../../components/Autocomplete";
+import * as Model from "../../model/Model";
+import { Utils } from "../../common/Utils";
 
 export interface UserMovieForm {
-  movieIndex?: number;
+  Id?: number;
   rating?: number;
-}
-
-interface Movie {
-  title: string;
-  imageUrl: string;
 }
 
 interface Props {
@@ -19,7 +16,7 @@ interface Props {
   onDelete: (id: number) => void;
   submitEvent: Event;
   onSubmit: (info: UserMovieForm) => void;
-  movieList: Movie[];
+  movies: Model.Movie[];
 }
 
 type State = UserMovieForm;
@@ -33,11 +30,11 @@ export default class UserMovie extends React.Component<Props, State> {
   }
 
   private _onSubmit = () => {
-    if (!this.state.movieIndex || !this.state.rating)
+    if (!this.state.Id || !this.state.rating)
       return false;
 
     this.props.onSubmit({
-      movieIndex: this.state.movieIndex,
+      Id: this.state.Id,
       rating: this.state.rating,
     });
     return true;
@@ -48,7 +45,8 @@ export default class UserMovie extends React.Component<Props, State> {
   }
 
   private _onTitleChange = (selectedMovie: AutocompleteItem) => {
-    this.setState({ movieIndex: selectedMovie.index });
+    const movie = this.props.movies.find(movie => movie.title === selectedMovie.value);
+    this.setState({ Id: movie.id });
   }
 
   private _onRatingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,20 +69,19 @@ export default class UserMovie extends React.Component<Props, State> {
         <ListItemAvatar>
           <img
             height="120px"
-            src={this.state.movieIndex !== undefined
-              ? this.props.movieList[this.state.movieIndex].imageUrl
-              // tslint:disable-next-line
-              : "https://is4-ssl.mzstatic.com/image/thumb/Video122/v4/02/cf/bc/02cfbc57-8dcb-09f7-d1d9-67da6e94d347/pr_source.lsr/268x0w.png"}
+            src={this.state.Id !== undefined
+              ? this.props.movies[this.state.Id].imageUrl
+              : Utils.DEFAULT_MOVIE_IMAGE}
           />
         </ListItemAvatar>
         <ListItemText>
           <Autocomplete
-            items={this.props.movieList.map((movie, index) => ({ value: movie.title, index }))}
+            items={this.props.movies.map((movie, index) => ({ value: movie.title, index }))}
             textFieldProps={{
               fullWidth: true,
               label: "Title",
               margin: "normal",
-              error: this.state.movieIndex === undefined,
+              error: this.state.Id === undefined,
             }}
             onSelectionChanged={this._onTitleChange}
           />

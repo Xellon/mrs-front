@@ -1,10 +1,10 @@
 import * as React from "react";
 import { MainInfo, MainInfoForm } from "./MainInfo";
-import { Button, Paper, Typography, Snackbar, IconButton } from "@material-ui/core";
+import { Button, Paper, Typography, Snackbar, SnackbarContent } from "@material-ui/core";
 import CustomEvent from "../../common/CustomEvent";
 import Movies from "./Movies";
-import CloseIcon from "@material-ui/icons/Close";
-import { UserMovieForm } from "./Movie";
+import { UserMovieForm } from "./UserMovie";
+import { Utils } from "../../common/Utils";
 
 export interface State {
   submitError?: string;
@@ -36,15 +36,34 @@ export class Register extends React.Component<{}, State> {
     this._form.movies.push(movieForm);
   }
 
-  private _onClick = () => {
+  private _onClick = async () => {
+    // Reset form
     this._form = this._defaultForm;
 
     if (this._submitEvent.notify(this, undefined)) {
-      // Post to database
+      const response = await Utils.fetchBackend(
+        "/api/signup",
+        {
+          method: "POST",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            ...this._form.mainInfo,
+            movies: this._form.movies,
+          })
+        });
+
+      if (response.ok)
+        return;
+
+      const errorText = await response.text();
+      this.setState({ submitError: errorText })
       return;
     }
-    this.setState({ submitError: "Error in one of the fields!" });
 
+    this.setState({ submitError: "Error in one of the fields!" });
   }
 
   public render() {
@@ -71,13 +90,12 @@ export class Register extends React.Component<{}, State> {
           open={!!this.state.submitError}
           autoHideDuration={3000}
           message={this.state.submitError}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
-          <IconButton
-            aria-label="Close"
-            color="inherit"
-          >
-            <CloseIcon />
-          </IconButton>
+          <SnackbarContent
+            message={this.state.submitError}
+            style={{ background: "red" }}
+          />
         </Snackbar>
       </main>
     );

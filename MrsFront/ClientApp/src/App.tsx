@@ -2,15 +2,17 @@ import * as React from "react";
 import { Route, withRouter } from "react-router";
 import { AppBar, Toolbar, Typography, CssBaseline, IconButton, Button } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
-import Main from "./pages/Main";
+import Main from "./pages/main/Main";
 import Login from "./pages/login/Login";
-import { MovieList } from "./pages/MovieList";
+import { MovieList } from "./pages/movielist/MovieList";
 import { Register } from "./pages/register/Register";
 import { RequestMovie } from "./pages/requestmovie/RequestMovie";
 import Welcome from "./pages/Welcome";
-import { Authentication, UserType } from "./common/Authentication";
+import { Authentication } from "./common/Authentication";
 
 import "./App.scss";
+import { UserType } from "./model/Model";
+import { Utils } from "./common/Utils";
 
 const styles = {
   grow: {
@@ -22,17 +24,11 @@ const styles = {
   },
 };
 
-function createOnNavigationClick(history: any, path: string) {
-  return () => {
-    history.push(path);
-  };
-}
-
 const MainPageButton = withRouter(({ history }) => (
   <Button
     color="inherit"
     style={styles.grow}
-    onClick={createOnNavigationClick(history, "/")}
+    onClick={Utils.createOnNavigationClick(history, "/")}
   >
     <Typography variant="h6" color="inherit">
       Movie Recommendation Service
@@ -44,7 +40,7 @@ const LoginPageButton = withRouter(({ history }) => (
   <Button
     color="inherit"
     style={styles.menuButton}
-    onClick={createOnNavigationClick(history, "/login")}
+    onClick={Utils.createOnNavigationClick(history, "/login")}
   >
     Login
   </Button>
@@ -54,7 +50,7 @@ const RegisterPageButton = withRouter(({ history }) => (
   <Button
     color="inherit"
     style={styles.menuButton}
-    onClick={createOnNavigationClick(history, "/register")}
+    onClick={Utils.createOnNavigationClick(history, "/register")}
   >
     Register
   </Button>
@@ -72,27 +68,73 @@ export default class App extends React.Component<{}, State> {
 
     let routes: React.ReactNode = (
       <>
-
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+        {/* TODO: REMOVE */}
+        <Route path="/movielist" component={MovieList} />
       </>
     );
 
     if (!user) {
-
+      return (
+        <>
+          <Route exact path="/" component={Welcome} />
+          {routes}
+        </>);
     }
 
-    {
-      this.state.userSignedIn
-      ?
+    routes = (
       <>
         <Route exact path="/" component={Main} />
-        <Route path="/movielist" component={MovieList} />
-        <Route path="/requestmovie" component={RequestMovie} />
+        {routes}
       </>
-      :
-      <Route exact path="/" component={Welcome} />
+    );
+
+    switch (user.userType) {
+      case UserType.Client:
+        routes = (
+          <>
+            <Route path="/requestmovie" component={RequestMovie} />
+            {routes}
+          </>);
+        break;
+      case UserType.Admin:
+      case UserType.Client:
+        routes = (
+          <>
+            <Route path="/movielist" component={MovieList} />
+            {routes}
+          </>);
+        break;
     }
-    <Route path="/login" component={Login} />
-      <Route path="/register" component={Register} />
+
+    return routes;
+  }
+
+  private getNavigationButtonsForUser() {
+    const user = Authentication.getSignedInUser();
+
+    if (!user)
+      return (
+        <>
+          <LoginPageButton />
+          <RegisterPageButton />
+        </>
+      );
+
+    return (
+      <Button
+        color="inherit"
+        style={styles.menuButton}
+        onClick={this.onSignOut}
+      >
+        Sign Out
+      </Button>
+    );
+  }
+
+  private onSignOut = () => {
+    location.reload();
   }
 
   public render() {
@@ -106,14 +148,11 @@ export default class App extends React.Component<{}, State> {
                 <MenuIcon />
               </IconButton>
               <MainPageButton />
-              <LoginPageButton />
-              <RegisterPageButton />
+              {this.getNavigationButtonsForUser()}
             </Toolbar>
           </AppBar>
         </header>
-        <>
-          {this.getRoutesForUser()}
-        </>
+        {this.getRoutesForUser()}
       </>
     );
   }

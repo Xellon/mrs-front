@@ -21,9 +21,14 @@ namespace MrsFront.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("UserId");
+
                     b.Property<int>("UsesLeft");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Memberships");
                 });
@@ -44,6 +49,11 @@ namespace MrsFront.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Movies");
+
+                    b.HasData(
+                        new { Id = 1, AverageRating = 9.0, ImageUrl = "https://images-na.ssl-images-amazon.com/images/I/719SFBdxRtL._SY679_.jpg", Title = "Avengers" },
+                        new { Id = 2, AverageRating = 9.5, ImageUrl = "https://images-na.ssl-images-amazon.com/images/I/A1t8xCe9jwL._SY550_.jpg", Title = "Avengers: Infinity War" }
+                    );
                 });
 
             modelBuilder.Entity("MrsFront.Model.MovieTag", b =>
@@ -57,6 +67,12 @@ namespace MrsFront.Migrations
                     b.HasIndex("MovieId");
 
                     b.ToTable("MovieTags");
+
+                    b.HasData(
+                        new { TagId = 1, MovieId = 1 },
+                        new { TagId = 1, MovieId = 2 },
+                        new { TagId = 2, MovieId = 2 }
+                    );
                 });
 
             modelBuilder.Entity("MrsFront.Model.Payment", b =>
@@ -64,19 +80,40 @@ namespace MrsFront.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<double>("Amount");
+                    b.Property<DateTime>("PaymentDate");
+
+                    b.Property<int>("ReceiptId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiptId")
+                        .IsUnique();
+
+                    b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("MrsFront.Model.Receipt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int?>("MembershipId");
 
-                    b.Property<DateTime>("PaymentDate");
+                    b.Property<double>("PaymentAmount");
 
-                    b.Property<string>("Type");
+                    b.Property<int?>("PaymentId");
+
+                    b.Property<DateTime>("ReceiptDate");
+
+                    b.Property<int>("ReceiptType");
+
+                    b.Property<int?>("RecommendationId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MembershipId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Receipts");
                 });
 
             modelBuilder.Entity("MrsFront.Model.Recommendation", b =>
@@ -84,7 +121,7 @@ namespace MrsFront.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("PaymentId");
+                    b.Property<int?>("ReceiptId");
 
                     b.Property<bool>("UsedForMembership");
 
@@ -92,7 +129,8 @@ namespace MrsFront.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PaymentId");
+                    b.HasIndex("ReceiptId")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -124,6 +162,12 @@ namespace MrsFront.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tags");
+
+                    b.HasData(
+                        new { Id = 1, Text = "Action" },
+                        new { Id = 2, Text = "Drama" },
+                        new { Id = 3, Text = "Horror" }
+                    );
                 });
 
             modelBuilder.Entity("MrsFront.Model.User", b =>
@@ -137,11 +181,19 @@ namespace MrsFront.Migrations
 
                     b.Property<string>("PasswordHash");
 
+                    b.Property<int>("UserTypeId");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("MembershipId");
+                    b.HasIndex("UserTypeId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new { Id = 1, Email = "client", PasswordHash = "client", UserTypeId = 1 },
+                        new { Id = 2, Email = "admin", PasswordHash = "admin", UserTypeId = 2 },
+                        new { Id = 3, Email = "finance", PasswordHash = "finance", UserTypeId = 3 }
+                    );
                 });
 
             modelBuilder.Entity("MrsFront.Model.UserMovie", b =>
@@ -172,9 +224,35 @@ namespace MrsFront.Migrations
                     b.ToTable("UserTagWhishes");
                 });
 
+            modelBuilder.Entity("MrsFront.Model.UserType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserTypes");
+
+                    b.HasData(
+                        new { Id = 1, Type = "client" },
+                        new { Id = 2, Type = "admin" },
+                        new { Id = 3, Type = "finance" }
+                    );
+                });
+
+            modelBuilder.Entity("MrsFront.Model.Membership", b =>
+                {
+                    b.HasOne("MrsFront.Model.User", "User")
+                        .WithOne("Membership")
+                        .HasForeignKey("MrsFront.Model.Membership", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("MrsFront.Model.MovieTag", b =>
                 {
-                    b.HasOne("MrsFront.Model.Movie")
+                    b.HasOne("MrsFront.Model.Movie", "Movie")
                         .WithMany("Tags")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -187,16 +265,24 @@ namespace MrsFront.Migrations
 
             modelBuilder.Entity("MrsFront.Model.Payment", b =>
                 {
-                    b.HasOne("MrsFront.Model.Membership")
-                        .WithMany("Payments")
+                    b.HasOne("MrsFront.Model.Receipt", "Receipt")
+                        .WithOne("Payment")
+                        .HasForeignKey("MrsFront.Model.Payment", "ReceiptId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MrsFront.Model.Receipt", b =>
+                {
+                    b.HasOne("MrsFront.Model.Membership", "Membership")
+                        .WithMany("Receipts")
                         .HasForeignKey("MembershipId");
                 });
 
             modelBuilder.Entity("MrsFront.Model.Recommendation", b =>
                 {
-                    b.HasOne("MrsFront.Model.Payment", "Payment")
-                        .WithMany()
-                        .HasForeignKey("PaymentId");
+                    b.HasOne("MrsFront.Model.Receipt", "Receipt")
+                        .WithOne("Recommendation")
+                        .HasForeignKey("MrsFront.Model.Recommendation", "ReceiptId");
 
                     b.HasOne("MrsFront.Model.User")
                         .WithMany("Recommendations")
@@ -210,7 +296,7 @@ namespace MrsFront.Migrations
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MrsFront.Model.Recommendation")
+                    b.HasOne("MrsFront.Model.Recommendation", "Recommendation")
                         .WithMany("RecommendedMovies")
                         .HasForeignKey("RecommendationId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -218,9 +304,10 @@ namespace MrsFront.Migrations
 
             modelBuilder.Entity("MrsFront.Model.User", b =>
                 {
-                    b.HasOne("MrsFront.Model.Membership", "Membership")
+                    b.HasOne("MrsFront.Model.UserType", "UserType")
                         .WithMany()
-                        .HasForeignKey("MembershipId");
+                        .HasForeignKey("UserTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MrsFront.Model.UserMovie", b =>
@@ -230,7 +317,7 @@ namespace MrsFront.Migrations
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MrsFront.Model.User")
+                    b.HasOne("MrsFront.Model.User", "User")
                         .WithMany("UserMovies")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -243,7 +330,7 @@ namespace MrsFront.Migrations
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MrsFront.Model.User")
+                    b.HasOne("MrsFront.Model.User", "User")
                         .WithMany("TagWhishes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

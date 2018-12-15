@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Paper } from "@material-ui/core";
-import "./Main.scss";
+import "./main/Main.scss";
 
 export default class Welcome extends React.Component {
 

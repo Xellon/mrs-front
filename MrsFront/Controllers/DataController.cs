@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MrsFront.Controllers
 {
     [Route("api/[controller]")]
-    public class DataController : Controller
+    public class DataController : ControllerBase
     {
         private Model.SQLiteContext _context;
 
@@ -20,6 +20,12 @@ namespace MrsFront.Controllers
         public IEnumerable<Model.Tag> Tags()
         {
             return _context.Tags.ToList();
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<Model.Movie> Movies()
+        {
+            return _context.Movies.ToList();
         }
 
         [HttpGet("[action]")]

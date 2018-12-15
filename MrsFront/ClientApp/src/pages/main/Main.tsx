@@ -1,7 +1,11 @@
 import * as React from "react";
 import "./Main.scss";
 import { Button, List } from "@material-ui/core";
-import SuggestedMovie from "../components/SuggestedMovie";
+import SuggestedMovie from "../../components/SuggestedMovie";
+import { Utils } from "../../common/Utils";
+import { withRouter } from "react-router-dom";
+import { Authentication } from "../../common/Authentication";
+import { UserType } from "../../model/Model";
 
 interface ResponseMovie {
   title: string;
@@ -13,17 +17,53 @@ interface ResponseRecommendedMovie {
   possibleRating: number;
 }
 
+interface Props {
+  history: any;
+}
+
 interface State {
   movies: ResponseRecommendedMovie[];
 }
 
-export default class Main extends React.Component<{}, State> {
+const RequestRecommendationButton = withRouter(({ history }) => (
+  <Button
+    color="inherit"
+    style={{
+      display: "block",
+      margin: "50px auto",
+    }}
+    variant="contained"
+    onClick={Utils.createOnNavigationClick(history, "/requestmovie")}
+  >
+    <Button>
+      Request a Movie
+    </Button>
+  </Button>
+));
+
+export default class Main extends React.Component<Props, State> {
   public readonly state: State = { movies: [] };
 
+  constructor(props: Props) {
+    super(props);
+
+    const user = Authentication.getSignedInUser();
+    switch (user.userType) {
+      case UserType.Client:
+        break;
+      case UserType.Admin:
+        props.history.push("/movielist");
+        break;
+      case UserType.Finance:
+        props.history.push("/receipts");
+        break;
+    }
+  }
+
   public async componentDidMount() {
-    const response = await fetch("http://localhost:4000/api/data/recommendedmovies", {
+    const response = await Utils.fetchBackend("/api/data/recommendedmovies", {
       method: "GET"
-    }).catch(err => err);
+    });
 
     if (!response.ok) {
       this.setState({ movies: [] });
@@ -52,14 +92,7 @@ export default class Main extends React.Component<{}, State> {
           padding: 1
         }}
         >
-          <Button
-            style={{
-              display: "block",
-              margin: "50px auto",
-            }}
-            variant="contained" >
-            Request a movie
-          </Button>
+          <RequestRecommendationButton />
         </div>
         <div>
           <h3>Last suggested movies</h3>

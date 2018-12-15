@@ -1,44 +1,38 @@
-
-export enum UserType {
-    Client,
-    Admin,
-    Finance,
-}
-
-export interface User {
-    id: number;
-    userType: UserType;
-}
+import { Utils } from "./Utils";
+import { User } from "../model/Model";
 
 let user: User | undefined;
 
-function validateSignIn(email: string, password: string): User | undefined {
-    // Go to server
-
-    //TODO: fix hack
-    switch (email) {
-        case "client@app.test":
-            if (password === "client")
-                user = { id: 1, userType: UserType.Client }
-            break;
-        case "finance@app.test":
-            if (password === "finance")
-                user = { id: 2, userType: UserType.Finance };
-            break;
-        case "admin@app.test":
-            if (password === "admin")
-                user = { id: 3, userType: UserType.Admin };
-            break;
+async function signIn(email: string, password: string): Promise<User | undefined> {
+  const response = await Utils.fetchBackend(
+    "/api/authentication/signin", {
+      method: "POST",
+      headers: { password, email }
     }
+  );
 
+  if (!response.ok)
+    return undefined;
+
+  try {
+    user = await response.json();
     return user;
+  }
+  catch {
+    return undefined;
+  }
 }
 
 function getSignedInUser() {
-    return user;
+  return user;
+}
+
+function signOut() {
+  user = undefined;
 }
 
 export const Authentication = {
-    validateSignIn,
-    getSignedInUser,
+  signIn,
+  signOut,
+  getSignedInUser,
 };

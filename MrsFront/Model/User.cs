@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,6 +9,8 @@ namespace MrsFront.Model
 {
     public class User
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
@@ -17,7 +21,7 @@ namespace MrsFront.Model
         public int UserTypeId { get; set; }
         public UserType UserType { get; set; }
 
-        public int MembershipId { get; set; }
+        public int? MembershipId { get; set; }
         public Membership Membership { get; set; }
     }
 }

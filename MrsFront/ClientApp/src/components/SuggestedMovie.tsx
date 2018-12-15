@@ -1,5 +1,6 @@
 import * as React from "react";
 import { ListItemText, ListItemAvatar, Paper, ListItem } from "@material-ui/core";
+import { Utils } from "../common/Utils";
 
 interface Props {
   title: string;
@@ -16,7 +17,7 @@ export default class SuggestedMovie extends React.PureComponent<Props> {
             <img
               src={this.props.imageUrl
                 ? this.props.imageUrl
-                : "https://i.imgur.com/Z2MYNbj.png/large_movie_poster.png"}
+                : Utils.DEFAULT_MOVIE_IMAGE}
               height={100}
             />
           </ListItemAvatar>
