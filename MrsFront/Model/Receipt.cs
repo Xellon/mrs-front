@@ -15,13 +15,16 @@ namespace MrsFront.Model
     public class Receipt
     {
         public int Id { get; set; }
-        public int MembershipId { get; set; }
 
+        public int MembershipId { get; set; }
         public Membership Membership { get; set; }
+
         public int PaymentId { get; set; }
         public Payment Payment { get; set; }
+
         public int RecommendationId { get; set; }
         public Recommendation Recommendation { get; set; }
+
         public DateTime ReceiptDate { get; set; }
         public double PaymentAmount { get; set; }
         public ReceiptType ReceiptType { get; set; }

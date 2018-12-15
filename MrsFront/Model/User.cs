@@ -13,6 +13,10 @@ namespace MrsFront.Model
         public List<UserMovie> UserMovies { get; set; }
         public List<Recommendation> Recommendations { get; set; }
         public List<UserTagWhish> TagWhishes { get; set; }
+
+        public int UserTypeId { get; set; }
+        public UserType UserType { get; set; }
+
         public int MembershipId { get; set; }
         public Membership Membership { get; set; }
     }

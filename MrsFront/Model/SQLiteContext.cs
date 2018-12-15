@@ -16,12 +16,11 @@ namespace MrsFront.Model
             modelBuilder.Entity<UserMovie>().HasKey(c => new { c.MovieId, c.UserId });
             modelBuilder.Entity<UserTagWhish>().HasKey(c => new { c.TagId, c.UserId });
             modelBuilder.Entity<MovieTag>().HasKey(c => new { c.TagId, c.MovieId });
-            modelBuilder.Entity<Tag>().HasData(
-                new Tag { Id = 0, Text = "Action" },
-                new Tag { Id = 1, Text = "Drama" },
-                new Tag { Id = 2, Text = "Horror" });
             modelBuilder.Entity<RecommendedMovie>().HasKey(c => new { c.MovieId, c.RecommendationId });
+
+            PopulateData(modelBuilder);
         }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Payment> Payments { get; set; }
@@ -34,7 +33,12 @@ namespace MrsFront.Model
         public DbSet<UserMovie> UserMovies { get; set; }
         public DbSet<Receipt> Receipts { get; set; }
 
-        
-
+        private void PopulateData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Tag>().HasData(
+                new Tag { Id = 0, Text = "Action" },
+                new Tag { Id = 1, Text = "Drama" },
+                new Tag { Id = 2, Text = "Horror" });
+        }
     }
 }

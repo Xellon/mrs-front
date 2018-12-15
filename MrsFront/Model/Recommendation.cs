@@ -10,6 +10,7 @@ namespace MrsFront.Model
         public int Id { get; set; }
         public bool UsedForMembership { get; set; }
         public List<RecommendedMovie> RecommendedMovies { get; set; }
+
         public int ReceiptId { get; set; }
         public Receipt Receipt { get; set; }
     }
