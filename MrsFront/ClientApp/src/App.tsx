@@ -13,6 +13,7 @@ import { Authentication } from "./common/Authentication";
 import "./App.scss";
 import { UserType } from "./model/Model";
 import { Utils } from "./common/Utils";
+import { Navigation } from "./components/navigation/Navigation";
 
 const styles = {
   grow: {
@@ -57,11 +58,11 @@ const RegisterPageButton = withRouter(({ history }) => (
 ));
 
 interface State {
-  userSignedIn: boolean;
+  showNavigation: boolean;
 }
 
 export default class App extends React.Component<{}, State> {
-  public readonly state: State = { userSignedIn: true }
+  public readonly state: State = { showNavigation: false }
 
   private getRoutesForUser() {
     const user = Authentication.getSignedInUser();
@@ -70,8 +71,6 @@ export default class App extends React.Component<{}, State> {
       <>
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
-        {/* TODO: REMOVE */}
-        <Route path="/movielist" component={MovieList} />
       </>
     );
 
@@ -134,7 +133,12 @@ export default class App extends React.Component<{}, State> {
   }
 
   private onSignOut = () => {
+    Authentication.signOut();
     location.reload();
+  }
+
+  private _onNavigationClick = () => {
+    this.setState(prevState => ({ showNavigation: !prevState.showNavigation }));
   }
 
   public render() {
@@ -144,7 +148,11 @@ export default class App extends React.Component<{}, State> {
         <header>
           <AppBar position="static">
             <Toolbar>
-              <IconButton color="inherit" aria-label="Menu">
+              <IconButton
+                color="inherit"
+                aria-label="Menu"
+                onClick={this._onNavigationClick}
+              >
                 <MenuIcon />
               </IconButton>
               <MainPageButton />
@@ -152,7 +160,15 @@ export default class App extends React.Component<{}, State> {
             </Toolbar>
           </AppBar>
         </header>
-        {this.getRoutesForUser()}
+        <div className="content"
+          style={{ gridTemplateColumns: this.state.showNavigation ? "200px auto" : "auto" }}
+        >
+          {/* Side menu */
+            this.state.showNavigation ? <Navigation /> : undefined}
+
+          {/* Main */}
+          {this.getRoutesForUser()}
+        </div>
       </>
     );
   }
