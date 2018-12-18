@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Route, withRouter } from "react-router";
-import { AppBar, Toolbar, Typography, CssBaseline, IconButton, Button } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+import { Route } from "react-router";
+import { CssBaseline } from "@material-ui/core";
+
 import Main from "./pages/main/Main";
 import Login from "./pages/login/Login";
 import { MovieList } from "./pages/movielist/MovieList";
@@ -10,52 +10,19 @@ import { RequestMovie } from "./pages/requestmovie/RequestMovie";
 import Welcome from "./pages/Welcome";
 import { Authentication } from "./common/Authentication";
 import { UserType } from "./model/Model";
-import { Utils } from "./common/Utils";
 import { Navigation } from "./components/navigation/Navigation";
+import { AboutPage } from "./pages/about/About";
+import { HeaderBar } from "./components/HeaderBar";
 
 import "./App.scss";
 
-const styles = {
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-};
-
-const MainPageButton = withRouter(({ history }) => (
-  <Button
-    color="inherit"
-    style={styles.grow}
-    onClick={Utils.createOnNavigationClick(history, "/")}
-  >
-    <Typography variant="h6" color="inherit">
-      Movie Recommendation Service
-    </Typography>
-  </Button>
-));
-
-const LoginPageButton = withRouter(({ history }) => (
-  <Button
-    color="inherit"
-    style={styles.menuButton}
-    onClick={Utils.createOnNavigationClick(history, "/login")}
-  >
-    Login
-  </Button>
-));
-
-const RegisterPageButton = withRouter(({ history }) => (
-  <Button
-    color="inherit"
-    style={styles.menuButton}
-    onClick={Utils.createOnNavigationClick(history, "/register")}
-  >
-    Register
-  </Button>
-));
+const SharedRoutes: React.ReactNode = (
+  <>
+    <Route path="/login" component={Login} />
+    <Route path="/register" component={Register} />
+    <Route path="/about" component={AboutPage} />
+  </>
+);
 
 interface State {
   showNavigation: boolean;
@@ -67,27 +34,12 @@ export default class App extends React.Component<{}, State> {
   private getRoutesForUser() {
     const user = Authentication.getSignedInUser();
 
-    let routes: React.ReactNode = (
-      <>
-        <Route path="/login" component={Login} />
-        <Route path="/register" component={Register} />
-      </>
-    );
+    let routes = SharedRoutes;
 
-    if (!user) {
-      return (
-        <>
-          <Route exact path="/" component={Welcome} />
-          {routes}
-        </>);
-    }
+    if (!user)
+      return (<><Route exact path="/" component={Welcome} />{routes}</>);
 
-    routes = (
-      <>
-        <Route exact path="/" component={Main} />
-        {routes}
-      </>
-    );
+    routes = (<><Route exact path="/" component={Main} />{routes}</>);
 
     switch (user.userType) {
       case UserType.Client:
@@ -98,6 +50,11 @@ export default class App extends React.Component<{}, State> {
           </>);
         break;
       case UserType.Admin:
+        routes = (
+          <>
+            <Route path="/receipts" component={MovieList} />
+            {routes}
+          </>);
       case UserType.Client:
         routes = (
           <>
@@ -110,33 +67,6 @@ export default class App extends React.Component<{}, State> {
     return routes;
   }
 
-  private getAppBarButtonsForUser() {
-    const user = Authentication.getSignedInUser();
-
-    if (!user)
-      return (
-        <>
-          <LoginPageButton />
-          <RegisterPageButton />
-        </>
-      );
-
-    return (
-      <Button
-        color="inherit"
-        style={styles.menuButton}
-        onClick={this.onSignOut}
-      >
-        Sign Out
-      </Button>
-    );
-  }
-
-  private onSignOut = () => {
-    Authentication.signOut();
-    location.reload();
-  }
-
   private _onNavigationClick = () => {
     this.setState(prevState => ({ showNavigation: !prevState.showNavigation }));
   }
@@ -146,19 +76,7 @@ export default class App extends React.Component<{}, State> {
       <>
         <CssBaseline />
         <header>
-          <AppBar position="static">
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="Menu"
-                onClick={this._onNavigationClick}
-              >
-                <MenuIcon />
-              </IconButton>
-              <MainPageButton />
-              {this.getAppBarButtonsForUser()}
-            </Toolbar>
-          </AppBar>
+          <HeaderBar onNavigationClick={this._onNavigationClick} />
         </header>
         <div className="content"
           style={{ gridTemplateColumns: this.state.showNavigation ? "200px auto" : "auto" }}
@@ -166,8 +84,8 @@ export default class App extends React.Component<{}, State> {
           {/* Side menu */
             this.state.showNavigation ? <Navigation /> : undefined}
 
-          {/* Main */}
-          {this.getRoutesForUser()}
+          {/* Main */
+            this.getRoutesForUser()}
         </div>
       </>
     );

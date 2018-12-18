@@ -1,0 +1,7 @@
+.requestmovie-chip {
+    margin: 5px;
+
+    &.selected, &:hover {
+        background: rgba(0, 0, 0, 0.3);
+    }
+}

@@ -21,7 +21,7 @@ export interface Movie {
 
 export interface Tag {
   id: number;
-  tag: string;
+  text: string;
 }
 
 export interface Membership {

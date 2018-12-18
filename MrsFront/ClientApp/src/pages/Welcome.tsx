@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Paper } from "@material-ui/core";
+import { Paper, Typography } from "@material-ui/core";
 import "./main/Main.scss";
 
 export default class Welcome extends React.Component {
@@ -7,11 +7,16 @@ export default class Welcome extends React.Component {
   public render() {
     return (
       <main>
-        <Paper style={{ padding: "10px" }}>
-          <h1>Welcome to Movie Recommendation service</h1>
-          <p>
-            Hello world!
-          </p>
+        <Paper style={{ padding: "20px" }}>
+          <Typography
+            variant="h4"
+            style={{ margin: "30px auto", textAlign: "center" }}
+          >
+            Welcome to Movie Recommendation service
+          </Typography>
+          <Typography>
+            Register, fill in your most favorite movies and get the appropriate recommendations.
+          </Typography>
         </Paper>
       </main>
     );
