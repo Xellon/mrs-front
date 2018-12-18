@@ -5,14 +5,11 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-
-import "./Login.scss";
 import { Authentication } from "../../common/Authentication";
 import { Snackbar, SnackbarContent } from "@material-ui/core";
+import { RouteComponentProps } from "react-router";
 
-interface Props {
-  history: any;
-}
+import "./Login.scss";
 
 interface State {
   email: string;
@@ -20,7 +17,7 @@ interface State {
   error?: string;
 }
 
-export default class Login extends React.Component<Props, State> {
+export default class Login extends React.Component<RouteComponentProps, State> {
   public readonly state: State = {
     email: "",
     password: ""

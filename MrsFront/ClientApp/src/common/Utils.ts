@@ -1,3 +1,5 @@
+import { History } from "history";
+
 const backendUrl = "http://localhost:4000";
 
 function fetchBackend(path: string, options?: RequestInit) {
@@ -5,7 +7,7 @@ function fetchBackend(path: string, options?: RequestInit) {
     return fetch(url, options);
 }
 
-function createOnNavigationClick(history: any, path: string) {
+function createOnNavigationClick(history: History, path: string) {
     return () => {
         history.push(path);
     };

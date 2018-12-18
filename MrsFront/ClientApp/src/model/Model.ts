@@ -1,25 +1,30 @@
 export enum UserType {
-    Client = 1,
-    Admin,
-    Finance,
+  Client = 1,
+  Admin,
+  Finance,
 }
 
 export interface User {
-    id: number;
-    email: string;
-    userType: UserType;
+  id: number;
+  email: string;
+  userType: UserType;
 }
 
 export interface Movie {
-    id: number;
-    description: string;
-    title: string;
-    tags: Tag[];
-    averageRating: number;
-    imageUrl?: string;
+  id: number;
+  description: string;
+  title: string;
+  tags: Tag[];
+  averageRating: number;
+  imageUrl?: string;
 }
 
 export interface Tag {
-    id: number;
-    tag: string;
+  id: number;
+  tag: string;
+}
+
+export interface Membership {
+  id: number;
+  usesLeft: number;
 }

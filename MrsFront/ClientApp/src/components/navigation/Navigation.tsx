@@ -1,31 +1,18 @@
 import * as React from "react";
-import { Typography, Button } from "@material-ui/core";
 import { Authentication } from "../../common/Authentication";
+import { GlobalNavigation } from "./Global";
+import { UserNavigation } from "./User";
+
+import "./Navigation.scss";
 
 export class Navigation extends React.Component {
-
   public render() {
+    const user = Authentication.getSignedInUser();
+
     return (
       <nav className="left-nav">
-        <Typography>
-          {Authentication.getSignedInUser()
-            ? Authentication.getSignedInUser().email
-            : undefined}
-        </Typography>
-        <Button
-          variant="contained"
-          color="inherit"
-          style={{ marginTop: 20 }}
-        >
-          Change movies
-        </Button>
-        <Button
-          variant="contained"
-          color="inherit"
-          style={{ marginTop: 20 }}
-        >
-          Recommendations
-        </Button>
+        {user ? <UserNavigation user={user} /> : undefined}
+        <GlobalNavigation />
       </nav>
     );
   }

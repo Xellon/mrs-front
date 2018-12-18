@@ -68,7 +68,7 @@ export class Register extends React.Component<{}, State> {
 
   public render() {
     return (
-      <main style={{ maxWidth: 600, margin: "auto" }}>
+      <main style={{ width: 600, margin: "0 auto" }}>
         <Typography variant="headline" style={{ paddingBottom: 10 }} align="center">Register</Typography>
         <Paper style={{ padding: 10 }} >
           <Typography variant="h6">Main info</Typography>

@@ -9,11 +9,11 @@ import { Register } from "./pages/register/Register";
 import { RequestMovie } from "./pages/requestmovie/RequestMovie";
 import Welcome from "./pages/Welcome";
 import { Authentication } from "./common/Authentication";
-
-import "./App.scss";
 import { UserType } from "./model/Model";
 import { Utils } from "./common/Utils";
 import { Navigation } from "./components/navigation/Navigation";
+
+import "./App.scss";
 
 const styles = {
   grow: {
@@ -110,7 +110,7 @@ export default class App extends React.Component<{}, State> {
     return routes;
   }
 
-  private getNavigationButtonsForUser() {
+  private getAppBarButtonsForUser() {
     const user = Authentication.getSignedInUser();
 
     if (!user)
@@ -156,7 +156,7 @@ export default class App extends React.Component<{}, State> {
                 <MenuIcon />
               </IconButton>
               <MainPageButton />
-              {this.getNavigationButtonsForUser()}
+              {this.getAppBarButtonsForUser()}
             </Toolbar>
           </AppBar>
         </header>

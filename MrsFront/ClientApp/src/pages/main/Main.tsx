@@ -3,7 +3,7 @@ import "./Main.scss";
 import { Button, List } from "@material-ui/core";
 import SuggestedMovie from "../../components/SuggestedMovie";
 import { Utils } from "../../common/Utils";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import { Authentication } from "../../common/Authentication";
 import { UserType } from "../../model/Model";
 
@@ -15,10 +15,6 @@ interface ResponseMovie {
 interface ResponseRecommendedMovie {
   movie: ResponseMovie;
   possibleRating: number;
-}
-
-interface Props {
-  history: any;
 }
 
 interface State {
@@ -41,10 +37,10 @@ const RequestRecommendationButton = withRouter(({ history }) => (
   </Button>
 ));
 
-export default class Main extends React.Component<Props, State> {
+export default class Main extends React.Component<RouteComponentProps, State> {
   public readonly state: State = { movies: [] };
 
-  constructor(props: Props) {
+  constructor(props: RouteComponentProps) {
     super(props);
 
     const user = Authentication.getSignedInUser();
