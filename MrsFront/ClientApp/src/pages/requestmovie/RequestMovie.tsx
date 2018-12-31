@@ -28,7 +28,7 @@ export class RequestMovie extends React.Component<{}, State> {
     });
   }
 
-  private _generateRecommendations = async () => {
+  private _onClickGenerateRecommendations = async () => {
     const user = Authentication.getSignedInUser();
     if (!user)
       return;
@@ -63,7 +63,7 @@ export class RequestMovie extends React.Component<{}, State> {
         <div>
           {this.renderTags(this.state)}
         </div>
-        <Button variant="outlined" onClick={this._generateRecommendations}>
+        <Button variant="outlined" onClick={this._onClickGenerateRecommendations}>
           Generate recommendations
         </Button>
       </main>

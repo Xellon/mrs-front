@@ -4,7 +4,7 @@ import { CssBaseline } from "@material-ui/core";
 
 import Main from "./pages/main/Main";
 import Login from "./pages/login/Login";
-import { MovieList } from "./pages/movielist/MovieList";
+import { Movies } from "./pages/movies/Movies";
 import { Register } from "./pages/register/Register";
 import { RequestMovie } from "./pages/requestmovie/RequestMovie";
 import Welcome from "./pages/Welcome";
@@ -13,6 +13,7 @@ import { UserType } from "./model/Model";
 import { Navigation } from "./components/navigation/Navigation";
 import { AboutPage } from "./pages/about/About";
 import { HeaderBar } from "./components/HeaderBar";
+import { Receipts } from "./pages/receipts/Receipts";
 
 import "./App.scss";
 
@@ -21,6 +22,12 @@ const SharedRoutes: React.ReactNode = (
     <Route path="/login" component={Login} />
     <Route path="/register" component={Register} />
     <Route path="/about" component={AboutPage} />
+  </>
+);
+
+const UserSharedRoutes: React.ReactNode = (
+  <>
+    <Route path="/receipts" component={Receipts} />
   </>
 );
 
@@ -39,7 +46,7 @@ export default class App extends React.Component<{}, State> {
     if (!user)
       return (<><Route exact path="/" component={Welcome} />{routes}</>);
 
-    routes = (<><Route exact path="/" component={Main} />{routes}</>);
+    routes = (<><Route exact path="/" component={Main} />{UserSharedRoutes}{routes}</>);
 
     switch (user.userType) {
       case UserType.Client:
@@ -52,15 +59,11 @@ export default class App extends React.Component<{}, State> {
       case UserType.Admin:
         routes = (
           <>
-            <Route path="/receipts" component={MovieList} />
+            <Route path="/movies" component={Movies} />
             {routes}
           </>);
-      case UserType.Client:
-        routes = (
-          <>
-            <Route path="/movielist" component={MovieList} />
-            {routes}
-          </>);
+        break;
+      case UserType.Finance:
         break;
     }
 

@@ -28,3 +28,24 @@ export interface Membership {
   id: number;
   usesLeft: number;
 }
+
+export enum ReceiptType {
+  OneTimeRecommendation,
+  Membership,
+  ExtraRecommendation,
+}
+
+export interface Receipt {
+  id: number;
+  membershipId?: number;
+  recommendationId?: number;
+  receiptDate: string;
+  paymentAmount: number;
+  receiptType: ReceiptType;
+}
+
+export interface RecommendedMovie {
+  recommendationId: number;
+  movieId: number;
+  possibleRating: number;
+}

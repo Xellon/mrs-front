@@ -11,7 +11,7 @@ interface State {
   movies?: Movie[];
 }
 
-export class MovieList extends React.Component<{}, State> {
+export class Movies extends React.Component<{}, State> {
   public readonly state: State = {};
 
   public async componentDidMount() {

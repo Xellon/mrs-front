@@ -24,7 +24,7 @@ const RequestRecommendationButton = createNavigationButton("Request a Recommenda
 const ReceiptsButton = createNavigationButton("Receipts", "/receipts");
 const MembershipButton = createNavigationButton("Become a Member!", "/membership", { background: "gold" });
 
-const MovieListButton = createNavigationButton("Movie List", "/movielist");
+const MovieListButton = createNavigationButton("Movie List", "/movies");
 const UsersButton = createNavigationButton("Users", "/users");
 
 interface Props {

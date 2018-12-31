@@ -24,12 +24,12 @@ async function signIn(email: string, password: string): Promise<Model.User | und
 }
 
 function getSignedInUser(): Model.User | undefined {
-  return user;
-  // return {
-  //   email: "client@test.com",
-  //   id: 1,
-  //   userType: Model.UserType.Client,
-  // };
+  //  return user;
+  return {
+    email: "client@test.com",
+    id: Model.UserType.Client,
+    userType: Model.UserType.Client,
+  };
 }
 
 function signOut() {

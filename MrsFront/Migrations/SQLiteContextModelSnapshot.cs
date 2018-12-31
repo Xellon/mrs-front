@@ -90,6 +90,10 @@ namespace MrsFront.Migrations
                         .IsUnique();
 
                     b.ToTable("Payments");
+
+                    b.HasData(
+                        new { Id = 1, PaymentDate = new DateTime(2018, 12, 31, 23, 50, 59, 414, DateTimeKind.Local), ReceiptId = 1 }
+                    );
                 });
 
             modelBuilder.Entity("MrsFront.Model.Receipt", b =>
@@ -114,6 +118,11 @@ namespace MrsFront.Migrations
                     b.HasIndex("MembershipId");
 
                     b.ToTable("Receipts");
+
+                    b.HasData(
+                        new { Id = 1, PaymentAmount = 3.0, PaymentId = 1, ReceiptDate = new DateTime(2018, 12, 31, 13, 50, 59, 412, DateTimeKind.Local), ReceiptType = 0, RecommendationId = 1 },
+                        new { Id = 2, PaymentAmount = 1.5, ReceiptDate = new DateTime(2018, 12, 31, 14, 50, 59, 414, DateTimeKind.Local), ReceiptType = 2, RecommendationId = 2 }
+                    );
                 });
 
             modelBuilder.Entity("MrsFront.Model.Recommendation", b =>
@@ -125,7 +134,7 @@ namespace MrsFront.Migrations
 
                     b.Property<bool>("UsedForMembership");
 
-                    b.Property<int?>("UserId");
+                    b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
@@ -135,6 +144,11 @@ namespace MrsFront.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Recommendations");
+
+                    b.HasData(
+                        new { Id = 1, ReceiptId = 1, UsedForMembership = false, UserId = 1 },
+                        new { Id = 2, ReceiptId = 2, UsedForMembership = false, UserId = 4 }
+                    );
                 });
 
             modelBuilder.Entity("MrsFront.Model.RecommendedMovie", b =>
@@ -150,6 +164,12 @@ namespace MrsFront.Migrations
                     b.HasIndex("RecommendationId");
 
                     b.ToTable("RecommendedMovies");
+
+                    b.HasData(
+                        new { MovieId = 1, RecommendationId = 1, PossibleRating = 10.0 },
+                        new { MovieId = 2, RecommendationId = 1, PossibleRating = 9.0 },
+                        new { MovieId = 1, RecommendationId = 2, PossibleRating = 9.0 }
+                    );
                 });
 
             modelBuilder.Entity("MrsFront.Model.Tag", b =>
@@ -192,7 +212,8 @@ namespace MrsFront.Migrations
                     b.HasData(
                         new { Id = 1, Email = "client", PasswordHash = "client", UserTypeId = 1 },
                         new { Id = 2, Email = "admin", PasswordHash = "admin", UserTypeId = 2 },
-                        new { Id = 3, Email = "finance", PasswordHash = "finance", UserTypeId = 3 }
+                        new { Id = 3, Email = "finance", PasswordHash = "finance", UserTypeId = 3 },
+                        new { Id = 4, Email = "random.user@gmail.com", PasswordHash = "user", UserTypeId = 1 }
                     );
                 });
 
@@ -284,9 +305,10 @@ namespace MrsFront.Migrations
                         .WithOne("Recommendation")
                         .HasForeignKey("MrsFront.Model.Recommendation", "ReceiptId");
 
-                    b.HasOne("MrsFront.Model.User")
+                    b.HasOne("MrsFront.Model.User", "User")
                         .WithMany("Recommendations")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MrsFront.Model.RecommendedMovie", b =>
