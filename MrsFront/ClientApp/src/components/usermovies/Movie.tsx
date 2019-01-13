@@ -3,8 +3,7 @@ import {
   TextField,
   ListItemText,
   ListItem,
-  ListItemAvatar,
-  IconButton
+  IconButton,
 } from "@material-ui/core";
 import { CustomEvent } from "../../common/CustomEvent";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -13,12 +12,24 @@ import * as DB from "../../model/DB";
 import * as Model from "../../model/Model";
 import { Utils } from "../../common/Utils";
 
+class MovieImage extends React.PureComponent<{ imageUrl?: string }> {
+  public render() {
+    return (
+      <img
+        height="120px"
+        src={this.props.imageUrl ? this.props.imageUrl : Utils.DEFAULT_MOVIE_IMAGE_URL}
+      />
+    );
+  }
+}
+
 interface Props {
   id: number;
   onDelete: (id: number) => void;
   submitEvent: CustomEvent;
-  onSubmit: (info: Model.UserMovie) => void;
+  onSubmit: (userMovie: Model.UserMovie) => void;
   movies: DB.Movie[];
+  userMovie?: Model.UserMovie;
 }
 
 interface State {
@@ -27,12 +38,7 @@ interface State {
 }
 
 export default class UserMovie extends React.Component<Props, State> {
-  public readonly state: State = {};
-
-  constructor(props: Props) {
-    super(props);
-    props.submitEvent.register(this._onSubmit);
-  }
+  public readonly state: State = { ...this.props.userMovie };
 
   private _onSubmit = () => {
     if (!this.state.movieId || !this.state.rating)
@@ -50,7 +56,7 @@ export default class UserMovie extends React.Component<Props, State> {
   }
 
   private _onTitleChange = (selectedMovie: AutocompleteItem) => {
-    const movie = this.props.movies.find(movie => movie.title === selectedMovie.value);
+    const movie = this.props.movies.find(m => m.title === selectedMovie.value);
     this.setState({ movieId: movie.id });
   }
 
@@ -68,17 +74,22 @@ export default class UserMovie extends React.Component<Props, State> {
     this.setState({ rating });
   }
 
+  public componentDidMount() {
+    this.props.submitEvent.register(this._onSubmit);
+  }
+
+  public componentWillUnmount() {
+    this.props.submitEvent.unregister(this._onSubmit);
+  }
+
   public render() {
     return (
       <ListItem>
-        <ListItemAvatar>
-          <img
-            height="120px"
-            src={this.state.movieId !== undefined
-              ? this.props.movies.find(m => m.id === this.state.movieId).imageUrl
-              : Utils.DEFAULT_MOVIE_IMAGE_URL}
-          />
-        </ListItemAvatar>
+        <MovieImage
+          imageUrl={this.state.movieId !== undefined
+            ? this.props.movies.find(m => m.id === this.state.movieId).imageUrl
+            : undefined}
+        />
         <ListItemText>
           <Autocomplete
             items={this.props.movies.map((movie, index) => ({ value: movie.title, index }))}
@@ -100,11 +111,9 @@ export default class UserMovie extends React.Component<Props, State> {
             error={!this.state.rating}
           />
         </ListItemText>
-        <ListItemAvatar>
-          <IconButton onClick={this._onDelete}>
-            <DeleteIcon />
-          </IconButton>
-        </ListItemAvatar>
+        <IconButton onClick={this._onDelete}>
+          <DeleteIcon />
+        </IconButton>
       </ListItem>
     );
   }

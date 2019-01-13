@@ -87,21 +87,23 @@ export default class Main extends React.Component<RouteComponentProps, State> {
     if (!this.state.movies || !this.state.recommendedMovies)
       return;
 
-    return this.state.recommendedMovies.map(movie =>
+    return this.state.recommendedMovies.map(movie => (
       <SuggestedMovie
         key={movie.movieId}
         title={this.state.movies.get(movie.movieId).title}
         possibleRating={movie.possibleRating}
-      />);
+      />
+    ));
   }
 
   public render() {
     return (
       <main>
-        <div style={{
-          height: 200,
-          padding: 1
-        }}
+        <div
+          style={{
+            height: 200,
+            padding: 1,
+          }}
         >
           <RequestRecommendationButton />
         </div>

@@ -23,6 +23,7 @@ export class RequestMovie extends React.Component<{}, State> {
           className={"requestmovie-chip" + (state[tag.id] ? " selected" : "")}
           label={tag.text}
           variant="outlined"
+          // tslint:disable-next-line:jsx-no-lambda
           onClick={() => this.setState(prevState => ({ [tag.id]: !prevState[tag.id] }))}
         />);
     });
@@ -38,11 +39,11 @@ export class RequestMovie extends React.Component<{}, State> {
         method: "POST",
         headers: {
           "Accept": "application/json",
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(
           Object.keys(this.state)
-            .filter(key => !isNaN(+key) && this.state[+key]))
+            .filter(key => !isNaN(+key) && this.state[+key])),
       });
   }
 

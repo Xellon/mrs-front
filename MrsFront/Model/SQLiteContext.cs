@@ -77,6 +77,11 @@ namespace MrsFront.Model
                 new UserType { Id = (int)UserTypeEnum.Admin, Type = "admin" },
                 new UserType { Id = (int)UserTypeEnum.Finance, Type = "finance" });
 
+            modelBuilder.Entity<UserMovie>().HasData(
+                new UserMovie { MovieId = 1, UserId = 1, Rating = 7 },
+                new UserMovie { MovieId = 2, UserId = 1, Rating = 5 });
+
+
             modelBuilder.Entity<Recommendation>().HasData(
                 new Recommendation { Id = 1, ReceiptId = 1, UserId = 1 },
                 new Recommendation { Id = 2, ReceiptId = 2, UserId = 4 });

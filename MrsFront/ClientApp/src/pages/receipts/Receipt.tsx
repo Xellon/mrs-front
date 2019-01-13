@@ -5,9 +5,11 @@ import { Utils } from "../../common/Utils";
 import { withRouter } from "react-router";
 import * as DB from "../../model/DB";
 
+// tslint:disable-next-line:no-var-requires
 const printJS = require("print-js");
 
-const BackButton = withRouter(({ history }) => (<Button onClick={() => { history.push("/receipts") }}>Back</Button>));
+// tslint:disable-next-line:jsx-no-lambda
+const BackButton = withRouter(({ history }) => (<Button onClick={() => history.push("/receipts")}>Back</Button>));
 
 interface Props {
   id: number;

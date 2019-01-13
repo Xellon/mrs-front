@@ -38,7 +38,7 @@ namespace MrsFront.Controllers
                     _context.UserMovies.Add(new Model.UserMovie
                     {
                         UserId = entry.Entity.Id,
-                        MovieId = movie.Id,
+                        MovieId = movie.MovieId,
                         Rating = movie.Rating,
                     });
                 }

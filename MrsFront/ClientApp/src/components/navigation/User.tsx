@@ -32,7 +32,7 @@ interface Props {
 }
 
 interface State {
-  isClientMember: boolean
+  isClientMember: boolean;
 }
 
 export class UserNavigation extends React.Component<Props, State> {
@@ -43,7 +43,7 @@ export class UserNavigation extends React.Component<Props, State> {
 
     this.state = {
       isClientMember: false,
-    }
+    };
 
     if (props.user.userType === DB.UserType.Client)
       this._client = new Client(props.user);

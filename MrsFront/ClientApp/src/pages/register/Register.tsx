@@ -2,9 +2,9 @@ import * as React from "react";
 import { MainInfo, MainInfoForm } from "./MainInfo";
 import { Button, Paper, Typography, Snackbar, SnackbarContent } from "@material-ui/core";
 import { CustomEvent } from "../../common/CustomEvent";
-import Movies from "./Movies";
-import { UserMovieForm } from "./UserMovie";
 import { Utils } from "../../common/Utils";
+import { UserMovies } from "../../components/usermovies/Movies";
+import * as Model from "../../model/Model";
 
 export interface State {
   submitError?: string;
@@ -12,7 +12,7 @@ export interface State {
 
 interface RegisterForm {
   mainInfo: MainInfoForm;
-  movies: UserMovieForm[];
+  movies: Model.UserMovie[];
 }
 
 export class Register extends React.Component<{}, State> {
@@ -24,7 +24,7 @@ export class Register extends React.Component<{}, State> {
   private get _defaultForm(): RegisterForm {
     return {
       mainInfo: undefined,
-      movies: new Array<UserMovieForm>(),
+      movies: [],
     };
   }
 
@@ -32,8 +32,8 @@ export class Register extends React.Component<{}, State> {
     this._form.mainInfo = mainInfo;
   }
 
-  private _retrieveMovieInfo = (movieForm: UserMovieForm) => {
-    this._form.movies.push(movieForm);
+  private _retrieveMovieInfo = async (movies: Model.UserMovie[]) => {
+    this._form.movies = movies;
   }
 
   private _onClick = async () => {
@@ -47,19 +47,19 @@ export class Register extends React.Component<{}, State> {
           method: "POST",
           headers: {
             "Accept": "application/json",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             ...this._form.mainInfo,
             movies: this._form.movies,
-          })
+          }),
         });
 
       if (response.ok)
         return;
 
       const errorText = await response.text();
-      this.setState({ submitError: errorText })
+      this.setState({ submitError: errorText });
       return;
     }
 
@@ -77,7 +77,7 @@ export class Register extends React.Component<{}, State> {
             onSubmit={this._retrieveMainInfo}
           />
         </Paper>
-        <Movies onSubmit={this._retrieveMovieInfo} submitEvent={this._submitEvent} />
+        <UserMovies onSubmit={this._retrieveMovieInfo} submitEvent={this._submitEvent} />
         <Button
           variant="contained"
           color="primary"

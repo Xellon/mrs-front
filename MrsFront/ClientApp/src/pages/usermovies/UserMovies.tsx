@@ -1,11 +1,12 @@
 import * as React from "react";
 import { UserMovies as Movies } from "../../components/usermovies/Movies";
-import { Typography } from "@material-ui/core";
+import { Typography, Button } from "@material-ui/core";
 import { CustomEvent } from "../../common/CustomEvent";
 import * as Model from "../../model/Model";
 import * as DB from "../../model/DB";
 import { Utils } from "../../common/Utils";
 import { Authentication } from "../../common/Authentication";
+import * as _ from "lodash";
 
 interface State {
   userMovies?: Model.UserMovie[];
@@ -16,7 +17,40 @@ export class UserMovies extends React.PureComponent<{}, State> {
 
   private _saveEvent = new CustomEvent();
 
-  private _onSave = async (movies: Model.UserMovie[]) => {
+  private getDeletedMovies(movies: Model.UserMovie[]) {
+    if (!this.state.userMovies)
+      return undefined;
+
+    const moviesToDelete: Model.UserMovie[] = [];
+
+    for (const movie of this.state.userMovies) {
+      if (!movies.find(m => m.movieId === movie.movieId))
+        moviesToDelete.push(movie);
+    }
+
+    return moviesToDelete;
+  }
+
+  private async requestDeletion(movies: Model.UserMovie[]) {
+    const user = Authentication.getSignedInUser();
+
+    await Utils.fetchBackend(`/api/data/usermovies?userId=${user.id}`, {
+      method: "DELETE",
+      body: JSON.stringify(movies),
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
+  private getAddedMovies(movies: Model.UserMovie[]) {
+    if (this.state.userMovies)
+      return movies.filter(m => !this.state.userMovies.find(userMovie => userMovie.movieId === m.movieId));
+    return movies;
+  }
+
+  private async requestAddition(movies: Model.UserMovie[]) {
     const user = Authentication.getSignedInUser();
 
     await Utils.fetchBackend(`/api/data/usermovies?userId=${user.id}`, {
@@ -24,11 +58,27 @@ export class UserMovies extends React.PureComponent<{}, State> {
       body: JSON.stringify(movies),
       headers: {
         "Accept": "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-    })
+    });
+  }
+
+  private _onSave = async (movies: Model.UserMovie[]) => {
+    const addedMovies = this.getAddedMovies(movies);
+
+    if (addedMovies && addedMovies.length)
+      await this.requestAddition(addedMovies);
+
+    const deletedMovies = this.getDeletedMovies(movies);
+
+    if (deletedMovies && deletedMovies.length)
+      await this.requestDeletion(deletedMovies);
 
     this.setState({ userMovies: movies });
+  }
+
+  private _onClick = () => {
+    this._saveEvent.notify(this, undefined);
   }
 
   public async componentDidMount() {
@@ -47,7 +97,10 @@ export class UserMovies extends React.PureComponent<{}, State> {
     return (
       <main>
         <Typography variant="headline">User movies</Typography>
-        <Movies onSubmit={this._onSave} submitEvent={this._saveEvent} />
+        <Movies onSubmit={this._onSave} submitEvent={this._saveEvent} userMovies={this.state.userMovies} />
+        <Button onClick={this._onClick}>
+          <Typography>Save</Typography>
+        </Button>
       </main>
     );
   }

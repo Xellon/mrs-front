@@ -2,7 +2,7 @@
 {
     public struct SentUserMovie
     {
-        public int Id;
+        public int MovieId;
         public int Rating;
     }
 }

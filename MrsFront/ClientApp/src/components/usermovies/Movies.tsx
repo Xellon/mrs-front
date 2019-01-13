@@ -7,27 +7,40 @@ import { Utils } from "../../common/Utils";
 import * as Model from "../../model/Model";
 import * as DB from "../../model/DB";
 
-type MovieId = number;
-
 interface Props {
   submitEvent: CustomEvent;
   onSubmit: (info: Model.UserMovie[]) => Promise<void>;
+  userMovies?: Model.UserMovie[];
 }
 
 interface State {
-  movieComponents: Map<number, React.ReactNode>;
+  componentIds: number[];
   movies?: DB.Movie[];
 }
 
 export class UserMovies extends React.Component<Props, State> {
   private _lastId = 0;
+  private _submitEvent = new CustomEvent();
+  private _defaultUserMovies = new Map<number, Model.UserMovie>();
 
   public readonly state: State = {
-    movieComponents: new Map<MovieId, React.ReactNode>(),
+    componentIds: [],
   };
 
-  private _onSubmit = (movie: Model.UserMovie) => {
+  private userMovies: Model.UserMovie[] = this.props.userMovies;
 
+  private _onSubmit = (movie: Model.UserMovie) => {
+    this.userMovies.push(movie);
+  }
+
+  private _onSubmitTriggered = () => {
+    this.userMovies = [];
+
+    const result = this._submitEvent.notify(this, undefined);
+
+    this.props.onSubmit(this.userMovies);
+
+    return result;
   }
 
   private createNewId() {
@@ -46,28 +59,63 @@ export class UserMovies extends React.Component<Props, State> {
   }
 
   private _onUserMovieDelete = (id: number) => {
-    const movies = this.state.movieComponents;
-    movies.delete(id);
-    this.setState({ movieComponents: movies });
+    const ids = this.state.componentIds;
+    ids.splice(ids.indexOf(id), 1);
+    this.setState({ componentIds: ids });
   }
 
   private _onAddNewUserMovie = () => {
-    const movies = this.state.movieComponents;
-    const id = this.createNewId();
-    movies.set(id, (
-      <UserMovie
-        key={"user_movie_" + id}
-        id={id}
-        onSubmit={this._onSubmit}
-        submitEvent={this.props.submitEvent}
-        onDelete={this._onUserMovieDelete}
-        movies={this.state.movies}
-      />));
-    this.setState({ movieComponents: movies });
+    const ids = this.state.componentIds;
+    ids.push(this.createNewId());
+
+    this.setState({ componentIds: ids });
   }
 
   public async componentDidMount() {
-    this.loadMovies();
+    await this.loadMovies();
+
+    this.props.submitEvent.register(this._onSubmitTriggered);
+  }
+
+  public async componentDidUpdate(prevProps: Props) {
+    if (this.props.userMovies && this.props.userMovies !== prevProps.userMovies) {
+      this._defaultUserMovies.clear();
+
+      const ids = this.state.componentIds;
+
+      for (const movie of this.props.userMovies) {
+        const id = this.createNewId();
+        this._defaultUserMovies.set(id, movie);
+        ids.push(id);
+      }
+
+      this.setState({ componentIds: ids });
+    }
+  }
+
+  public async componentWillUnmount() {
+    await this.loadMovies();
+    this.props.submitEvent.unregister(this._onSubmitTriggered);
+  }
+
+  private renderMovies(state: State) {
+    return this.state.componentIds.map(id => {
+      const movie = this._defaultUserMovies.get(id);
+
+      return (
+        <React.Fragment key={"user_movie_" + id}>
+          <UserMovie
+            id={id}
+            onSubmit={this._onSubmit}
+            submitEvent={this._submitEvent}
+            onDelete={this._onUserMovieDelete}
+            movies={state.movies}
+            userMovie={movie}
+          />
+          <Divider />
+        </React.Fragment>
+      );
+    });
   }
 
   public render() {
@@ -77,19 +125,15 @@ export class UserMovies extends React.Component<Props, State> {
         <List>
           {this.state.movies
             ?
-            <AddMovieButton onClick={this._onAddNewUserMovie} />
+            <>
+              <AddMovieButton key="movie_button" onClick={this._onAddNewUserMovie} />
+              {this.renderMovies(this.state)}
+            </>
             :
-            <ListItem>
+            <ListItem key="circular_progress">
               <CircularProgress />
-            </ListItem>}
-          {Array.from(this.state.movieComponents.values(), movie => {
-            return (
-              <>
-                <Divider />
-                {movie}
-              </>
-            );
-          })}
+            </ListItem>
+          }
         </List>
       </Paper>
     );

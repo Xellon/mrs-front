@@ -21,5 +21,6 @@
         "jsx-no-lambda": true,
         "curly": false,
         "no-object-literal-type-assertion": false,
+        "max-classes-per-file": false
     }
 }

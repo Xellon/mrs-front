@@ -104,7 +104,7 @@ namespace MrsFront.Controllers
                 {
                     UserId = userId,
                     Rating = movie.Rating,
-                    MovieId = movie.Id
+                    MovieId = movie.MovieId
                 });
             }
 
@@ -119,5 +119,33 @@ namespace MrsFront.Controllers
 
             return Ok();
         }
+
+        [HttpDelete("usermovies")]
+        public IActionResult DeleteUserMovies([FromBody]IEnumerable<SentUserMovie> userMovies, int userId)
+        {
+            foreach (var movie in userMovies)
+            {
+                var userMovie = new Model.UserMovie()
+                {
+                    UserId = userId,
+                    MovieId = movie.MovieId
+                };
+
+                _context.UserMovies.Attach(userMovie);
+                _context.UserMovies.Remove(userMovie);
+            }
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
     }
 }
