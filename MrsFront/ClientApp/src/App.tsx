@@ -9,13 +9,14 @@ import { Register } from "./pages/register/Register";
 import { RequestMovie } from "./pages/requestmovie/RequestMovie";
 import Welcome from "./pages/Welcome";
 import { Authentication } from "./common/Authentication";
-import { UserType } from "./model/Model";
+import * as DB from "./model/DB";
 import { Navigation } from "./components/navigation/Navigation";
 import { AboutPage } from "./pages/about/About";
 import { HeaderBar } from "./components/HeaderBar";
 import { Receipts } from "./pages/receipts/Receipts";
 
 import "./App.scss";
+import { UserMovies } from "./pages/usermovies/UserMovies";
 
 const SharedRoutes: React.ReactNode = (
   <>
@@ -49,21 +50,22 @@ export default class App extends React.Component<{}, State> {
     routes = (<><Route exact path="/" component={Main} />{UserSharedRoutes}{routes}</>);
 
     switch (user.userType) {
-      case UserType.Client:
+      case DB.UserType.Client:
         routes = (
           <>
             <Route path="/requestmovie" component={RequestMovie} />
+            <Route path="/usermovies" component={UserMovies} />
             {routes}
           </>);
         break;
-      case UserType.Admin:
+      case DB.UserType.Admin:
         routes = (
           <>
             <Route path="/movies" component={Movies} />
             {routes}
           </>);
         break;
-      case UserType.Finance:
+      case DB.UserType.Finance:
         break;
     }
 

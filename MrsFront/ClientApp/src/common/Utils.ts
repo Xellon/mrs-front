@@ -13,10 +13,10 @@ function createOnNavigationClick(history: History, path: string) {
     };
 }
 
-const DEFAULT_MOVIE_IMAGE = "https://i.imgur.com/Z2MYNbj.png/large_movie_poster.png";
+const DEFAULT_MOVIE_IMAGE_URL = "https://i.imgur.com/Z2MYNbj.png/large_movie_poster.png";
 
 export const Utils = {
     fetchBackend,
     createOnNavigationClick,
-    DEFAULT_MOVIE_IMAGE
+    DEFAULT_MOVIE_IMAGE_URL
 }

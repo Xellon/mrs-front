@@ -3,7 +3,7 @@ import { IconButton, Button, Typography, Paper, CircularProgress } from "@materi
 import PrintIcon from "@material-ui/icons/Print";
 import { Utils } from "../../common/Utils";
 import { withRouter } from "react-router";
-import * as Model from "../../model/Model";
+import * as DB from "../../model/DB";
 
 const printJS = require("print-js");
 
@@ -14,7 +14,7 @@ interface Props {
 }
 
 interface State {
-  receipt?: Model.Receipt;
+  receipt?: DB.Receipt;
 }
 
 export class Receipt extends React.PureComponent<Props, State> {
@@ -30,7 +30,7 @@ export class Receipt extends React.PureComponent<Props, State> {
     if (!response.ok)
       return;
 
-    const receipt = await response.json() as Model.Receipt;
+    const receipt = await response.json() as DB.Receipt;
 
     this.setState({ receipt });
   }

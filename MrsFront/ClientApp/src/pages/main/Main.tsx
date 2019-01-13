@@ -5,13 +5,13 @@ import SuggestedMovie from "../../components/SuggestedMovie";
 import { Utils } from "../../common/Utils";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { Authentication } from "../../common/Authentication";
-import * as Model from "../../model/Model";
+import * as DB from "../../model/DB";
 
 type MovieId = number;
 
 interface State {
-  movies?: Map<MovieId, Model.Movie>;
-  recommendedMovies?: Model.RecommendedMovie[];
+  movies?: Map<MovieId, DB.Movie>;
+  recommendedMovies?: DB.RecommendedMovie[];
 }
 
 const RequestRecommendationButton = withRouter(({ history }) => (
@@ -38,18 +38,18 @@ export default class Main extends React.Component<RouteComponentProps, State> {
 
     const user = Authentication.getSignedInUser();
     switch (user.userType) {
-      case Model.UserType.Client:
+      case DB.UserType.Client:
         break;
-      case Model.UserType.Admin:
+      case DB.UserType.Admin:
         props.history.push("/movies");
         break;
-      case Model.UserType.Finance:
+      case DB.UserType.Finance:
         props.history.push("/receipts");
         break;
     }
   }
 
-  private async getMovies(): Promise<Model.Movie[] | undefined> {
+  private async getMovies(): Promise<DB.Movie[] | undefined> {
     const response = await Utils.fetchBackend("/api/data/movies");
 
     if (!response.ok)
@@ -58,7 +58,7 @@ export default class Main extends React.Component<RouteComponentProps, State> {
     return response.json();
   }
 
-  private async getRecommendedMovies(): Promise<Model.RecommendedMovie[] | undefined> {
+  private async getRecommendedMovies(): Promise<DB.RecommendedMovie[] | undefined> {
     const user = Authentication.getSignedInUser();
 
     const response = await Utils.fetchBackend(`/api/data/recommendedmovies/latest?userId=${user.id}`);
@@ -74,7 +74,7 @@ export default class Main extends React.Component<RouteComponentProps, State> {
 
     const movieArray = await this.getMovies();
 
-    const movies = new Map<MovieId, Model.Movie>();
+    const movies = new Map<MovieId, DB.Movie>();
 
     for (const movie of movieArray) {
       movies.set(movie.id, movie);

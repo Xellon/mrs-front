@@ -5,3 +5,16 @@
         background: rgba(0, 0, 0, 0.3);
     }
 }
+
+.requestmovie-chipcontainer {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 500px;
+    margin: auto;
+}
+
+button.requestmovie-generatebutton {
+    margin: 50px auto;
+    display: block;
+}

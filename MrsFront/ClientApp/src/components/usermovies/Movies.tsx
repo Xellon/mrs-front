@@ -1,14 +1,17 @@
 import * as React from "react";
 import { List, Paper, Typography, Divider, ListItem, CircularProgress } from "@material-ui/core";
 import AddMovieButton from "../../components/AddMovieButton";
-import UserMovie, { UserMovieForm } from "./UserMovie";
+import UserMovie from "./Movie";
 import { CustomEvent } from "../../common/CustomEvent";
 import { Utils } from "../../common/Utils";
+import * as Model from "../../model/Model";
 import * as DB from "../../model/DB";
+
+type MovieId = number;
 
 interface Props {
   submitEvent: CustomEvent;
-  onSubmit: (info: UserMovieForm) => void;
+  onSubmit: (info: Model.UserMovie[]) => Promise<void>;
 }
 
 interface State {
@@ -16,12 +19,16 @@ interface State {
   movies?: DB.Movie[];
 }
 
-export default class Movies extends React.Component<Props, State> {
+export class UserMovies extends React.Component<Props, State> {
   private _lastId = 0;
 
   public readonly state: State = {
-    movieComponents: new Map<number, React.ReactNode>(),
+    movieComponents: new Map<MovieId, React.ReactNode>(),
   };
+
+  private _onSubmit = (movie: Model.UserMovie) => {
+
+  }
 
   private createNewId() {
     return ++this._lastId;
@@ -35,25 +42,25 @@ export default class Movies extends React.Component<Props, State> {
 
     const movies = await response.json() as DB.Movie[];
 
-    this.setState({ movies: movies });
+    this.setState({ movies });
   }
 
-  private _onMovieDelete = (id: number) => {
+  private _onUserMovieDelete = (id: number) => {
     const movies = this.state.movieComponents;
     movies.delete(id);
     this.setState({ movieComponents: movies });
   }
 
-  private _onAddNewMovie = () => {
+  private _onAddNewUserMovie = () => {
     const movies = this.state.movieComponents;
     const id = this.createNewId();
     movies.set(id, (
       <UserMovie
         key={"user_movie_" + id}
         id={id}
-        onSubmit={this.props.onSubmit}
+        onSubmit={this._onSubmit}
         submitEvent={this.props.submitEvent}
-        onDelete={this._onMovieDelete}
+        onDelete={this._onUserMovieDelete}
         movies={this.state.movies}
       />));
     this.setState({ movieComponents: movies });
@@ -70,7 +77,7 @@ export default class Movies extends React.Component<Props, State> {
         <List>
           {this.state.movies
             ?
-            <AddMovieButton onClick={this._onAddNewMovie} />
+            <AddMovieButton onClick={this._onAddNewUserMovie} />
             :
             <ListItem>
               <CircularProgress />

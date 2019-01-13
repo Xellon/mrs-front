@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as Model from "../../model/Model";
+import * as DB from "../../model/DB";
 import { Typography, Divider, Avatar, Button } from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
 import { Client } from "../../common/Client";
@@ -28,7 +28,7 @@ const MovieListButton = createNavigationButton("Movie List", "/movies");
 const UsersButton = createNavigationButton("Users", "/users");
 
 interface Props {
-  user: Model.User;
+  user: DB.User;
 }
 
 interface State {
@@ -45,13 +45,13 @@ export class UserNavigation extends React.Component<Props, State> {
       isClientMember: false,
     }
 
-    if (props.user.userType === Model.UserType.Client)
+    if (props.user.userType === DB.UserType.Client)
       this._client = new Client(props.user);
   }
 
   private getButtons() {
     switch (this.props.user.userType) {
-      case Model.UserType.Client:
+      case DB.UserType.Client:
         return (
           <>
             <ChangeMoviesButton />
@@ -59,13 +59,13 @@ export class UserNavigation extends React.Component<Props, State> {
             <ReceiptsButton />
             {!this.state.isClientMember ? <MembershipButton /> : undefined}
           </>);
-      case Model.UserType.Admin:
+      case DB.UserType.Admin:
         return (
           <>
             <MovieListButton />
             <UsersButton />
           </>);
-      case Model.UserType.Finance:
+      case DB.UserType.Finance:
         return (
           <>
             <ReceiptsButton />

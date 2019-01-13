@@ -63,32 +63,9 @@ namespace MrsFront.Controllers
         {
             return _context.Recommendations.Where(r => r.UserId == userId)
                 .Join(_context.RecommendedMovies, 
-                    r => r.Id, 
-                    m => m.RecommendationId, 
+                    r => r.Id,
+                    m => m.RecommendationId,
                     (r, m) => m);
-            //return new List<Model.RecommendedMovie>()
-            //{
-            //    new Model.RecommendedMovie()
-            //    {
-            //        Movie = new Model.Movie()
-            //        {
-            //            Title = "Boy adventures",
-            //            AverageRating = 5
-            //        },
-            //        PossibleRating = 9
-                    
-            //    },
-            //    new Model.RecommendedMovie()
-            //    {
-            //        Movie = new Model.Movie()
-            //        {
-            //            Title = "Tiny avengers",
-            //            AverageRating = 9
-            //        },
-            //        PossibleRating = 10
-
-            //    }
-            //};
         }
 
         [HttpGet("recommendedmovies/latest")]
@@ -110,6 +87,37 @@ namespace MrsFront.Controllers
                 return _context.Users;
 
             return _context.Users.Where(u => u.UserTypeId == (int)userType);
+        }
+
+        [HttpGet("usermovies")]
+        public IEnumerable<Model.UserMovie> GetUserMovies(int userId)
+        {
+            return _context.UserMovies.Where(m => m.UserId == userId);
+        }
+
+        [HttpPost("usermovies")]
+        public IActionResult PostUserMovies([FromBody]IEnumerable<SentUserMovie> userMovies, int userId)
+        {
+            foreach (var movie in userMovies)
+            {
+                _context.UserMovies.Add(new Model.UserMovie()
+                {
+                    UserId = userId,
+                    Rating = movie.Rating,
+                    MovieId = movie.Id
+                });
+            }
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
+            return Ok();
         }
     }
 }

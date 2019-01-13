@@ -1,7 +1,7 @@
 import * as React from "react";
 import { MainInfo, MainInfoForm } from "./MainInfo";
 import { Button, Paper, Typography, Snackbar, SnackbarContent } from "@material-ui/core";
-import CustomEvent from "../../common/CustomEvent";
+import { CustomEvent } from "../../common/CustomEvent";
 import Movies from "./Movies";
 import { UserMovieForm } from "./UserMovie";
 import { Utils } from "../../common/Utils";

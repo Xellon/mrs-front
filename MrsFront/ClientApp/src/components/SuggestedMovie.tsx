@@ -17,7 +17,7 @@ export default class SuggestedMovie extends React.PureComponent<Props> {
             <img
               src={this.props.imageUrl
                 ? this.props.imageUrl
-                : Utils.DEFAULT_MOVIE_IMAGE}
+                : Utils.DEFAULT_MOVIE_IMAGE_URL}
               height={100}
             />
           </ListItemAvatar>

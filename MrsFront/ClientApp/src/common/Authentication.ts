@@ -1,9 +1,9 @@
 import { Utils } from "./Utils";
-import * as Model from "../model/Model";
+import * as DB from "../model/DB";
 
-let user: Model.User | undefined;
+let user: DB.User | undefined;
 
-async function signIn(email: string, password: string): Promise<Model.User | undefined> {
+async function signIn(email: string, password: string): Promise<DB.User | undefined> {
   const response = await Utils.fetchBackend(
     "/api/authentication/signin", {
       method: "POST",
@@ -23,12 +23,12 @@ async function signIn(email: string, password: string): Promise<Model.User | und
   }
 }
 
-function getSignedInUser(): Model.User | undefined {
+function getSignedInUser(): DB.User | undefined {
   //  return user;
   return {
     email: "client@test.com",
-    id: Model.UserType.Client,
-    userType: Model.UserType.Client,
+    id: DB.UserType.Client,
+    userType: DB.UserType.Client,
   };
 }
 

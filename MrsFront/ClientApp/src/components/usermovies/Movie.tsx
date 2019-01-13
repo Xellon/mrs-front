@@ -1,25 +1,30 @@
 import * as React from "react";
-import { TextField, ListItemText, ListItem, ListItemAvatar, IconButton } from "@material-ui/core";
+import {
+  TextField,
+  ListItemText,
+  ListItem,
+  ListItemAvatar,
+  IconButton
+} from "@material-ui/core";
 import { CustomEvent } from "../../common/CustomEvent";
 import DeleteIcon from "@material-ui/icons/Delete";
-import Autocomplete, { AutocompleteItem } from "../../components/Autocomplete";
+import Autocomplete, { AutocompleteItem } from "../Autocomplete";
 import * as DB from "../../model/DB";
+import * as Model from "../../model/Model";
 import { Utils } from "../../common/Utils";
-
-export interface UserMovieForm {
-  Id?: number;
-  rating?: number;
-}
 
 interface Props {
   id: number;
   onDelete: (id: number) => void;
   submitEvent: CustomEvent;
-  onSubmit: (info: UserMovieForm) => void;
+  onSubmit: (info: Model.UserMovie) => void;
   movies: DB.Movie[];
 }
 
-type State = UserMovieForm;
+interface State {
+  movieId?: number;
+  rating?: number;
+}
 
 export default class UserMovie extends React.Component<Props, State> {
   public readonly state: State = {};
@@ -30,11 +35,11 @@ export default class UserMovie extends React.Component<Props, State> {
   }
 
   private _onSubmit = () => {
-    if (!this.state.Id || !this.state.rating)
+    if (!this.state.movieId || !this.state.rating)
       return false;
 
     this.props.onSubmit({
-      Id: this.state.Id,
+      movieId: this.state.movieId,
       rating: this.state.rating,
     });
     return true;
@@ -46,7 +51,7 @@ export default class UserMovie extends React.Component<Props, State> {
 
   private _onTitleChange = (selectedMovie: AutocompleteItem) => {
     const movie = this.props.movies.find(movie => movie.title === selectedMovie.value);
-    this.setState({ Id: movie.id });
+    this.setState({ movieId: movie.id });
   }
 
   private _onRatingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,8 +74,8 @@ export default class UserMovie extends React.Component<Props, State> {
         <ListItemAvatar>
           <img
             height="120px"
-            src={this.state.Id !== undefined
-              ? this.props.movies[this.state.Id].imageUrl
+            src={this.state.movieId !== undefined
+              ? this.props.movies.find(m => m.id === this.state.movieId).imageUrl
               : Utils.DEFAULT_MOVIE_IMAGE_URL}
           />
         </ListItemAvatar>
@@ -81,7 +86,7 @@ export default class UserMovie extends React.Component<Props, State> {
               fullWidth: true,
               label: "Title",
               margin: "normal",
-              error: this.state.Id === undefined,
+              error: !this.state.movieId,
             }}
             onSelectionChanged={this._onTitleChange}
           />

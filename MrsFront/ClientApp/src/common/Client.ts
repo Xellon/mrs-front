@@ -1,26 +1,26 @@
-import * as Model from "../model/Model";
+import * as DB from "../model/DB";
 import { Utils } from "./Utils";
 
 export class Client {
-  private _basicData: Model.User;
+  private _basicData: DB.User;
 
-  constructor(basicData: Model.User) {
+  constructor(basicData: DB.User) {
     this._basicData = Object.freeze(basicData);
   }
 
   public get data() { return this._basicData; }
 
-  public get movies(): Model.Movie[] {
+  public get movies(): DB.Movie[] {
     return [];
   }
 
-  public async getMembership(): Promise<Model.Membership | undefined> {
+  public async getMembership(): Promise<DB.Membership | undefined> {
     const response = await Utils.fetchBackend(`/api/data/membership?userId=${this._basicData.id}`);
 
     if (!response.ok)
       return undefined;
 
-    const membership: Model.Membership | undefined = await response.json();
+    const membership: DB.Membership | undefined = await response.json();
 
     return membership;
   }

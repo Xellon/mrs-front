@@ -4,11 +4,11 @@ import ListItem from "@material-ui/core/ListItem";
 import Avatar from "@material-ui/core/Avatar";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Paper, ListItemText, IconButton, Divider } from "@material-ui/core";
-import { Movie } from "../../model/Model";
+import * as DB from "../../model/DB";
 import { Utils } from "../../common/Utils";
 
 interface State {
-  movies?: Movie[];
+  movies?: DB.Movie[];
 }
 
 export class Movies extends React.Component<{}, State> {
@@ -20,7 +20,7 @@ export class Movies extends React.Component<{}, State> {
     if (!response.ok)
       return;
 
-    const movies = await response.json() as Movie[];
+    const movies = await response.json() as DB.Movie[];
     this.setState({ movies });
   }
 

@@ -1,12 +1,12 @@
 import * as React from "react";
 import { Button, Chip } from "@material-ui/core";
-import * as Model from "../../model/Model";
+import * as DB from "../../model/DB";
 import { Utils } from "../../common/Utils";
 import "./RequestMovie.scss";
 import { Authentication } from "../../common/Authentication";
 
 interface State {
-  tags: Model.Tag[];
+  tags: DB.Tag[];
   [index: number]: boolean;
 }
 
@@ -52,7 +52,7 @@ export class RequestMovie extends React.Component<{}, State> {
     if (!response.ok)
       return;
 
-    const tags: Model.Tag[] = await response.json();
+    const tags: DB.Tag[] = await response.json();
 
     this.setState({ tags });
   }
@@ -60,10 +60,14 @@ export class RequestMovie extends React.Component<{}, State> {
   public render() {
     return (
       <main>
-        <div>
+        <div className="requestmovie-chipcontainer">
           {this.renderTags(this.state)}
         </div>
-        <Button variant="outlined" onClick={this._onClickGenerateRecommendations}>
+        <Button
+          className="requestmovie-generatebutton"
+          variant="outlined"
+          onClick={this._onClickGenerateRecommendations}
+        >
           Generate recommendations
         </Button>
       </main>

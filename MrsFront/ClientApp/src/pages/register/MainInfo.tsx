@@ -1,6 +1,6 @@
 import * as React from "react";
 import { TextField } from "@material-ui/core";
-import CustomEvent from "../../common/CustomEvent";
+import { CustomEvent } from "../../common/CustomEvent";
 
 export interface MainInfoForm {
   email: string;

@@ -1,10 +1,10 @@
 import { ListItem } from "@material-ui/core";
 import { withRouter, RouteComponentProps } from "react-router";
 import * as React from "react";
-import * as Model from "../../model/Model";
+import * as DB from "../../model/DB";
 
 interface Props extends RouteComponentProps {
-  receipt: Model.Receipt;
+  receipt: DB.Receipt;
 }
 
 class ReceiptListItemBase extends React.PureComponent<Props> {

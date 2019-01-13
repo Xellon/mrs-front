@@ -1,12 +1,12 @@
 import * as React from "react";
 import { List, Paper, CircularProgress } from "@material-ui/core";
 import { ReceiptListItem } from "./ListItem";
-import * as Model from "../../model/Model";
+import * as DB from "../../model/DB";
 import { Utils } from "../../common/Utils";
 import { Authentication } from "../../common/Authentication";
 
 interface State {
-  receipts?: Model.Receipt[];
+  receipts?: DB.Receipt[];
 }
 
 export class ReceiptList extends React.PureComponent<{}, State> {
@@ -17,7 +17,7 @@ export class ReceiptList extends React.PureComponent<{}, State> {
 
     let response: Response;
 
-    if (user.userType == Model.UserType.Client)
+    if (user.userType == DB.UserType.Client)
       response = await Utils.fetchBackend(`/api/data/receipts?userId=${user.id}`);
     else
       response = await Utils.fetchBackend("/api/data/receipts");
@@ -25,7 +25,7 @@ export class ReceiptList extends React.PureComponent<{}, State> {
     if (!response.ok)
       return;
 
-    const receipts = await response.json() as Model.Receipt[];
+    const receipts = await response.json() as DB.Receipt[];
 
     this.setState({ receipts });
   }
