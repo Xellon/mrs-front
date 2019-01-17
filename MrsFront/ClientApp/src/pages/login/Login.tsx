@@ -7,7 +7,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { Authentication } from "../../common/Authentication";
 import { Snackbar, SnackbarContent } from "@material-ui/core";
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps } from "react-router-dom";
 
 import "./Login.scss";
 
@@ -20,7 +20,7 @@ interface State {
 export default class Login extends React.Component<RouteComponentProps, State> {
   public readonly state: State = {
     email: "",
-    password: ""
+    password: "",
   };
 
   public _onSubmit = async (e: React.FormEvent) => {

@@ -79,9 +79,8 @@ export class UserMovies extends React.Component<Props, State> {
 
   public async componentDidUpdate(prevProps: Props) {
     if (this.props.userMovies && this.props.userMovies !== prevProps.userMovies) {
+      const ids = [];
       this._defaultUserMovies.clear();
-
-      const ids = this.state.componentIds;
 
       for (const movie of this.props.userMovies) {
         const id = this.createNewId();
@@ -99,7 +98,7 @@ export class UserMovies extends React.Component<Props, State> {
   }
 
   private renderMovies(state: State) {
-    return this.state.componentIds.map(id => {
+    return state.componentIds.map(id => {
       const movie = this._defaultUserMovies.get(id);
 
       return (

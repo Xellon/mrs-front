@@ -74,7 +74,11 @@ export class UserMovies extends React.PureComponent<{}, State> {
     if (deletedMovies && deletedMovies.length)
       await this.requestDeletion(deletedMovies);
 
-    this.setState({ userMovies: movies });
+    let userMovies = addedMovies;
+    if (this.state.userMovies)
+      userMovies = userMovies.concat(
+        this.state.userMovies.filter(m => !deletedMovies.find(deletedMovie => deletedMovie.movieId === m.movieId)));
+    this.setState({ userMovies });
   }
 
   private _onClick = () => {

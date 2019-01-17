@@ -1,7 +1,6 @@
 import * as React from "react";
-import { Route } from "react-router";
+import { Route } from "react-router-dom";
 import { CssBaseline } from "@material-ui/core";
-
 import Main from "./pages/main/Main";
 import Login from "./pages/login/Login";
 import { Movies } from "./pages/movies/Movies";
@@ -18,11 +17,18 @@ import { Receipts } from "./pages/receipts/Receipts";
 import "./App.scss";
 import { UserMovies } from "./pages/usermovies/UserMovies";
 
+// function errorPage() {
+//   return (
+//     <main>Page does not exist</main>
+//   );
+// }
+
 const SharedRoutes: React.ReactNode = (
   <>
     <Route path="/login" component={Login} />
     <Route path="/register" component={Register} />
     <Route path="/about" component={AboutPage} />
+    {/* <Route path="*" component={errorPage} /> */}
   </>
 );
 
@@ -37,7 +43,7 @@ interface State {
 }
 
 export default class App extends React.Component<{}, State> {
-  public readonly state: State = { showNavigation: false }
+  public readonly state: State = { showNavigation: false };
 
   private getRoutesForUser() {
     const user = Authentication.getSignedInUser();
@@ -83,7 +89,8 @@ export default class App extends React.Component<{}, State> {
         <header>
           <HeaderBar onNavigationClick={this._onNavigationClick} />
         </header>
-        <div className="content"
+        <div
+          className="content"
           style={{ gridTemplateColumns: this.state.showNavigation ? "200px auto" : "auto" }}
         >
           {/* Side menu */

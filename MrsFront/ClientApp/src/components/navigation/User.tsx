@@ -3,7 +3,7 @@ import * as DB from "../../model/DB";
 import { Typography, Divider, Avatar, Button } from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
 import { Client } from "../../common/Client";
-import { withRouter } from "react-router";
+import { withRouter } from "react-router-dom";
 import { Utils } from "../../common/Utils";
 
 export function createNavigationButton(text: string, path: string, style?: React.CSSProperties) {

@@ -37,7 +37,7 @@ interface State {
   rating?: number;
 }
 
-export default class UserMovie extends React.Component<Props, State> {
+export default class UserMovie extends React.PureComponent<Props, State> {
   public readonly state: State = { ...this.props.userMovie };
 
   private _onSubmit = () => {
@@ -83,11 +83,13 @@ export default class UserMovie extends React.Component<Props, State> {
   }
 
   public render() {
+    const setMovie = this.props.movies.find(m => m.id === this.state.movieId);
+
     return (
       <ListItem>
         <MovieImage
-          imageUrl={this.state.movieId !== undefined
-            ? this.props.movies.find(m => m.id === this.state.movieId).imageUrl
+          imageUrl={setMovie !== undefined
+            ? setMovie.imageUrl
             : undefined}
         />
         <ListItemText>
@@ -99,12 +101,13 @@ export default class UserMovie extends React.Component<Props, State> {
               margin: "normal",
               error: !this.state.movieId,
             }}
+            defaultValue={setMovie ? setMovie.title : undefined}
             onSelectionChanged={this._onTitleChange}
           />
           <TextField
             style={{ width: "48px", display: "block" }}
             label="Rating"
-            value={this.state.rating}
+            value={this.state.rating ? this.state.rating : ""}
             onChange={this._onRatingChange}
             type="number"
             margin="normal"
