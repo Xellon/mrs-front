@@ -2,7 +2,7 @@ import * as React from "react";
 import { AppBar, Toolbar, IconButton, Button, Typography } from "@material-ui/core";
 import { Authentication } from "../common/Authentication";
 import { Utils } from "../common/Utils";
-import { withRouter } from "react-router";
+import { withRouter } from "react-router-dom";
 import MenuIcon from "@material-ui/icons/Menu";
 
 const styles = {
@@ -14,7 +14,6 @@ const styles = {
     marginRight: 20,
   },
 };
-
 
 const MainPageButton = withRouter(({ history }) => (
   <Button

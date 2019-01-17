@@ -2,7 +2,7 @@ import * as React from "react";
 import { IconButton, Button, Typography, Paper, CircularProgress } from "@material-ui/core";
 import PrintIcon from "@material-ui/icons/Print";
 import { Utils } from "../../common/Utils";
-import { withRouter } from "react-router";
+import { withRouter } from "react-router-dom";
 import * as DB from "../../model/DB";
 
 // tslint:disable-next-line:no-var-requires

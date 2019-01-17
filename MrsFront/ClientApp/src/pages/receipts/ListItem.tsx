@@ -1,5 +1,5 @@
 import { ListItem } from "@material-ui/core";
-import { withRouter, RouteComponentProps } from "react-router";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import * as React from "react";
 import * as DB from "../../model/DB";
 
