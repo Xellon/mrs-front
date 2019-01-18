@@ -4,10 +4,14 @@ export enum UserType {
   Finance,
 }
 
-export interface User {
+export interface SignedInUser {
   id: number;
   email: string;
   userType: UserType;
+}
+
+export interface User extends SignedInUser {
+  membershipId: number;
 }
 
 export interface Movie {

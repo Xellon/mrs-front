@@ -2,9 +2,9 @@ import * as DB from "../model/DB";
 import { Utils } from "./Utils";
 
 export class Client {
-  private _basicData: DB.User;
+  private _basicData: DB.SignedInUser;
 
-  constructor(basicData: DB.User) {
+  constructor(basicData: DB.SignedInUser) {
     this._basicData = Object.freeze(basicData);
   }
 

@@ -60,7 +60,7 @@ export default class App extends React.Component<{}, State> {
         routes = (
           <>
             <Route path="/requestmovie" component={RequestMovie} />
-            <Route path="/usermovies" component={UserMovies} />
+            <Route path="/user/movies" component={UserMovies} />
             {routes}
           </>);
         break;

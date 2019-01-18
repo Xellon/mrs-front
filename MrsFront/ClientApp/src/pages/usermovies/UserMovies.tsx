@@ -34,7 +34,7 @@ export class UserMovies extends React.PureComponent<{}, State> {
   private async requestDeletion(movies: Model.UserMovie[]) {
     const user = Authentication.getSignedInUser();
 
-    await Utils.fetchBackend(`/api/data/usermovies?userId=${user.id}`, {
+    await Utils.fetchBackend(`/api/data/user/movies?userId=${user.id}`, {
       method: "DELETE",
       body: JSON.stringify(movies),
       headers: {
@@ -53,7 +53,7 @@ export class UserMovies extends React.PureComponent<{}, State> {
   private async requestAddition(movies: Model.UserMovie[]) {
     const user = Authentication.getSignedInUser();
 
-    await Utils.fetchBackend(`/api/data/usermovies?userId=${user.id}`, {
+    await Utils.fetchBackend(`/api/data/user/movies?userId=${user.id}`, {
       method: "POST",
       body: JSON.stringify(movies),
       headers: {
@@ -88,7 +88,7 @@ export class UserMovies extends React.PureComponent<{}, State> {
   public async componentDidMount() {
     const user = Authentication.getSignedInUser();
 
-    const response = await Utils.fetchBackend(`/api/data/usermovies?userId=${user.id}`);
+    const response = await Utils.fetchBackend(`/api/data/user/movies?userId=${user.id}`);
 
     if (!response.ok)
       return;

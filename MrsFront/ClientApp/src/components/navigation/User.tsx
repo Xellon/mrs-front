@@ -28,7 +28,7 @@ const MovieListButton = createNavigationButton("Movie List", "/movies");
 const UsersButton = createNavigationButton("Users", "/users");
 
 interface Props {
-  user: DB.User;
+  user: DB.SignedInUser;
 }
 
 interface State {

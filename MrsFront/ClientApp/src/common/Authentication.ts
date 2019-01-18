@@ -1,7 +1,7 @@
 import { Utils } from "./Utils";
 import * as DB from "../model/DB";
 
-function saveUser(user: DB.User) {
+function saveUser(user: DB.SignedInUser) {
   localStorage.setItem("user", JSON.stringify(user));
 }
 
@@ -9,7 +9,7 @@ function deleteUser() {
   localStorage.removeItem("user");
 }
 
-function getUser(): DB.User | undefined {
+function getUser(): DB.SignedInUser | undefined {
   const userString = localStorage.getItem("user");
 
   if (!userString)
@@ -18,7 +18,7 @@ function getUser(): DB.User | undefined {
   return JSON.parse(userString);
 }
 
-async function signIn(email: string, password: string): Promise<DB.User | undefined> {
+async function signIn(email: string, password: string): Promise<DB.SignedInUser | undefined> {
   const response = await Utils.fetchBackend(
     "/api/authentication/signin", {
       method: "POST",
@@ -30,7 +30,7 @@ async function signIn(email: string, password: string): Promise<DB.User | undefi
     return undefined;
 
   try {
-    const user: DB.User = await response.json();
+    const user: DB.SignedInUser = await response.json();
     saveUser(user);
     return user;
   } catch {
@@ -38,7 +38,7 @@ async function signIn(email: string, password: string): Promise<DB.User | undefi
   }
 }
 
-function getSignedInUser(): DB.User | undefined {
+function getSignedInUser(): DB.SignedInUser | undefined {
   return getUser();
 }
 

@@ -21,13 +21,17 @@ export class RecommendedMovies extends React.PureComponent<Props, State> {
     if (!this.state.movies || !this.state.recommendedMovies)
       return;
 
-    return this.state.recommendedMovies.map(movie => (
-      <SuggestedMovie
-        key={movie.movieId}
-        title={this.state.movies.get(movie.movieId).title}
-        possibleRating={movie.possibleRating}
-      />
-    ));
+    return this.state.recommendedMovies.map(recommendedMovie => {
+      const movie = this.state.movies.get(recommendedMovie.movieId);
+      return (
+        <SuggestedMovie
+          key={movie.id}
+          title={movie.title}
+          imageUrl={movie.imageUrl}
+          possibleRating={recommendedMovie.possibleRating}
+        />
+      );
+    });
   }
 
   private async getMovies(): Promise<DB.Movie[] | undefined> {
