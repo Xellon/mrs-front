@@ -22,12 +22,6 @@ namespace MrsFront.Controllers
         }
 
         [HttpGet("[action]")]
-        public Model.Membership Membership(int userId)
-        {
-            return _context.Memberships.FirstOrDefault(m => m.UserId == userId);
-        }
-
-        [HttpGet("[action]")]
         public IEnumerable<Model.Tag> Tags()
         {
             return _context.Tags;

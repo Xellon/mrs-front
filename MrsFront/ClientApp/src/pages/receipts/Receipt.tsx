@@ -12,7 +12,18 @@ import { Authentication } from "../../common/Authentication";
 const printJS = require("print-js");
 
 // tslint:disable-next-line:jsx-no-lambda
-const BackButton = withRouter(({ history }) => (<Button onClick={() => history.push("/receipts")}>Back</Button>));
+const BackButton = withRouter(({ history }) => (
+  <Button
+    style={{ marginBottom: 30 }}
+    onClick={Utils.createOnNavigationClick(history, "/receipts")}
+    variant="outlined"
+  >
+    <Typography>
+      Back
+    </Typography>
+
+  </Button>
+));
 
 interface Props {
   id: number;

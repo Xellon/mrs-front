@@ -10,12 +10,14 @@ import "./Main.scss";
 
 const RequestRecommendationButton = withRouter(({ history }) => (
   <Button
-    color="inherit"
     style={{
+      width: "50vw",
+      height: "60px",
       display: "block",
       margin: "50px auto",
     }}
     variant="contained"
+    color="primary"
     onClick={Utils.createOnNavigationClick(history, "/requestmovie")}
   >
     Request a Movie

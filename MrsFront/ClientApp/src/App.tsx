@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Route } from "react-router-dom";
-import { CssBaseline } from "@material-ui/core";
+import { CssBaseline, MuiThemeProvider, createMuiTheme, Theme } from "@material-ui/core";
 import Main from "./pages/main/Main";
 import Login from "./pages/login/Login";
 import { Movies } from "./pages/movies/Movies";
@@ -16,6 +16,9 @@ import { Receipts } from "./pages/receipts/Receipts";
 
 import "./App.scss";
 import { UserMovies } from "./pages/usermovies/UserMovies";
+import { Membership } from "./pages/membership/Membership";
+import { Props } from "./pages/register/MainInfo";
+import { lime, pink } from "@material-ui/core/colors";
 
 // function errorPage() {
 //   return (
@@ -44,6 +47,18 @@ interface State {
 
 export default class App extends React.Component<{}, State> {
   public readonly state: State = { showNavigation: false };
+  private readonly _theme: Theme;
+
+  constructor(props: Props) {
+    super(props);
+
+    this._theme = createMuiTheme({
+      palette: {
+        primary: lime,
+        secondary: pink,
+      },
+    });
+  }
 
   private getRoutesForUser() {
     const user = Authentication.getSignedInUser();
@@ -60,7 +75,8 @@ export default class App extends React.Component<{}, State> {
         routes = (
           <>
             <Route path="/requestmovie" component={RequestMovie} />
-            <Route path="/user/movies" component={UserMovies} />
+            <Route path="/usermovies" component={UserMovies} />
+            <Route path="/membership" component={Membership} />
             {routes}
           </>);
         break;
@@ -84,7 +100,7 @@ export default class App extends React.Component<{}, State> {
 
   public render() {
     return (
-      <>
+      <MuiThemeProvider theme={this._theme}>
         <CssBaseline />
         <header>
           <HeaderBar onNavigationClick={this._onNavigationClick} />
@@ -99,7 +115,7 @@ export default class App extends React.Component<{}, State> {
           {/* Main */
             this.getRoutesForUser()}
         </div>
-      </>
+      </MuiThemeProvider>
     );
   }
 }

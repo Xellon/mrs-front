@@ -102,8 +102,18 @@ export class UserMovies extends React.PureComponent<{}, State> {
       <main>
         <Typography variant="headline">User movies</Typography>
         <Movies onSubmit={this._onSave} submitEvent={this._saveEvent} userMovies={this.state.userMovies} />
-        <Button onClick={this._onClick}>
-          <Typography>Save</Typography>
+        <Button
+          style={{
+            margin: "50px auto",
+            display: "block",
+            width: "80vw",
+            height: "80px",
+          }}
+          onClick={this._onClick}
+          variant="raised"
+          color="primary"
+        >
+          <Typography color="textPrimary">Save</Typography>
         </Button>
       </main>
     );
