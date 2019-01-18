@@ -34,7 +34,7 @@ namespace MrsFront.Controllers
                 .Aggregate(new List<Model.Receipt>(), (r1, r2) => r1.Concat(r2).ToList());
 
             var recommendationReceipts = _context.Recommendations
-                .Where(m => m.UserId == userId)
+                .Where(m => m.UserId == userId && m.Receipt != null)
                 .Select(m => m.Receipt);
 
             return membershipReceipts.Concat(recommendationReceipts);
@@ -63,6 +63,16 @@ namespace MrsFront.Controllers
         {
             return _context.Recommendations.Where(r => r.UserId == userId)
                 .Join(_context.RecommendedMovies, 
+                    r => r.Id,
+                    m => m.RecommendationId,
+                    (r, m) => m);
+        }
+
+        [HttpGet("recommendedmovies/{id}")]
+        public IEnumerable<Model.RecommendedMovie> RecommendedMovies([FromRoute]int id, int userId)
+        {
+            return _context.Recommendations.Where(r => r.UserId == userId && r.Id == id)
+                .Join(_context.RecommendedMovies,
                     r => r.Id,
                     m => m.RecommendationId,
                     (r, m) => m);
@@ -147,5 +157,45 @@ namespace MrsFront.Controllers
             return Ok();
         }
 
+        [HttpPost("[action]")]
+        public IActionResult GenerateRecommendations([FromBody]IEnumerable<int> tagIds, int userId)
+        {
+            var recommendedMovies = (
+                from movies in _context.Movies
+                join tags in _context.MovieTags on movies.Id equals tags.MovieId
+                where tagIds.Contains(tags.TagId)
+                select new { movies.Id, Rating = movies.AverageRating,  }
+                ).Distinct().OrderByDescending(movie => movie.Rating).Take(10);
+
+            if (recommendedMovies.Count() == 0)
+                return BadRequest();
+
+            var recommendation = new Model.Recommendation()
+            {
+                UserId = userId,
+                UsedForMembership = true,
+            };
+           
+            _context.Recommendations.Attach(recommendation);
+            _context.Recommendations.Add(recommendation);
+            _context.SaveChanges();
+
+            foreach (var movie in recommendedMovies)
+            {
+                var recommendedMovie = new Model.RecommendedMovie()
+                {
+                    MovieId = movie.Id,
+                    PossibleRating = movie.Rating,
+                    RecommendationId = recommendation.Id,
+                };
+
+                _context.RecommendedMovies.Attach(recommendedMovie);
+                _context.RecommendedMovies.Add(recommendedMovie);
+            }
+
+            _context.SaveChanges();
+
+            return Ok(recommendation.Id);
+        }
     }
 }

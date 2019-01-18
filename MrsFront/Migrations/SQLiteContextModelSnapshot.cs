@@ -92,7 +92,7 @@ namespace MrsFront.Migrations
                     b.ToTable("Payments");
 
                     b.HasData(
-                        new { Id = 1, PaymentDate = new DateTime(2018, 12, 31, 23, 50, 59, 414, DateTimeKind.Local), ReceiptId = 1 }
+                        new { Id = 1, PaymentDate = new DateTime(2019, 1, 18, 0, 15, 17, 207, DateTimeKind.Local), ReceiptId = 1 }
                     );
                 });
 
@@ -120,8 +120,8 @@ namespace MrsFront.Migrations
                     b.ToTable("Receipts");
 
                     b.HasData(
-                        new { Id = 1, PaymentAmount = 3.0, PaymentId = 1, ReceiptDate = new DateTime(2018, 12, 31, 13, 50, 59, 412, DateTimeKind.Local), ReceiptType = 0, RecommendationId = 1 },
-                        new { Id = 2, PaymentAmount = 1.5, ReceiptDate = new DateTime(2018, 12, 31, 14, 50, 59, 414, DateTimeKind.Local), ReceiptType = 2, RecommendationId = 2 }
+                        new { Id = 1, PaymentAmount = 3.0, PaymentId = 1, ReceiptDate = new DateTime(2019, 1, 17, 14, 15, 17, 205, DateTimeKind.Local), ReceiptType = 0, RecommendationId = 1 },
+                        new { Id = 2, PaymentAmount = 1.5, ReceiptDate = new DateTime(2019, 1, 17, 15, 15, 17, 207, DateTimeKind.Local), ReceiptType = 2, RecommendationId = 2 }
                     );
                 });
 
@@ -230,6 +230,11 @@ namespace MrsFront.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserMovies");
+
+                    b.HasData(
+                        new { MovieId = 1, UserId = 1, Rating = 7f },
+                        new { MovieId = 2, UserId = 1, Rating = 5f }
+                    );
                 });
 
             modelBuilder.Entity("MrsFront.Model.UserTagWhish", b =>

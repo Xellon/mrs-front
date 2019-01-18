@@ -1,18 +1,29 @@
 import * as React from "react";
-import { Button, Chip } from "@material-ui/core";
+import { Button, Chip, CircularProgress } from "@material-ui/core";
 import * as DB from "../../model/DB";
 import { Utils } from "../../common/Utils";
 import "./RequestMovie.scss";
 import { Authentication } from "../../common/Authentication";
+import { RecommendedMovies } from "../../components/RecommendedMovies";
+
+enum RequestStatus {
+  NotStarted,
+  Pending,
+  Error,
+  Success,
+}
 
 interface State {
   tags: DB.Tag[];
+  recommendationId?: number;
+  requestStatus: RequestStatus;
   [index: number]: boolean;
 }
 
 export class RequestMovie extends React.Component<{}, State> {
   public readonly state: State = {
     tags: [],
+    requestStatus: RequestStatus.NotStarted,
   };
 
   private renderTags(state: State) {
@@ -34,7 +45,9 @@ export class RequestMovie extends React.Component<{}, State> {
     if (!user)
       return;
 
-    await Utils.fetchBackend(
+    this.setState({ requestStatus: RequestStatus.Pending });
+
+    const response = await Utils.fetchBackend(
       `/api/data/generaterecommendations?userId=${user.id}`, {
         method: "POST",
         headers: {
@@ -45,6 +58,13 @@ export class RequestMovie extends React.Component<{}, State> {
           Object.keys(this.state)
             .filter(key => !isNaN(+key) && this.state[+key])),
       });
+
+    if (!response.ok) {
+      this.setState({ requestStatus: RequestStatus.Error });
+      return;
+    }
+
+    this.setState({ recommendationId: +(await response.text()), requestStatus: RequestStatus.Success });
   }
 
   public async componentDidMount() {
@@ -68,9 +88,15 @@ export class RequestMovie extends React.Component<{}, State> {
           className="requestmovie-generatebutton"
           variant="outlined"
           onClick={this._onClickGenerateRecommendations}
+          disabled={this.state.requestStatus === RequestStatus.Pending}
         >
           Generate recommendations
         </Button>
+        {this.state.requestStatus === RequestStatus.Pending ? <CircularProgress /> : undefined}
+        {this.state.requestStatus === RequestStatus.Error ? "Error generating recommended movies" : undefined}
+        {this.state.requestStatus === RequestStatus.Success
+          ? <RecommendedMovies recommendationId={this.state.recommendationId} />
+          : undefined}
       </main>
     );
   }

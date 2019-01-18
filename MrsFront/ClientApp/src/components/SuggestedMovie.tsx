@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ListItemText, ListItemAvatar, Paper, ListItem } from "@material-ui/core";
+import { ListItemText, Paper, ListItem } from "@material-ui/core";
 import { Utils } from "../common/Utils";
 
 interface Props {
@@ -8,19 +8,17 @@ interface Props {
   possibleRating: number;
 }
 
-export default class SuggestedMovie extends React.PureComponent<Props> {
+export class SuggestedMovie extends React.PureComponent<Props> {
   public render() {
     return (
       <Paper style={{ margin: 5 }}>
         <ListItem>
-          <ListItemAvatar >
-            <img
-              src={this.props.imageUrl
-                ? this.props.imageUrl
-                : Utils.DEFAULT_MOVIE_IMAGE_URL}
-              height={100}
-            />
-          </ListItemAvatar>
+          <img
+            src={this.props.imageUrl
+              ? this.props.imageUrl
+              : Utils.DEFAULT_MOVIE_IMAGE_URL}
+            height={100}
+          />
           <ListItemText secondary={this.props.title}>
             Title
           </ListItemText>
