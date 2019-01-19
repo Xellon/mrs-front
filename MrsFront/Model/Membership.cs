@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,6 +13,7 @@ namespace MrsFront.Model
         public int UsesLeft { get; set; }
 
         public int UserId { get; set; }
+        [JsonIgnore]
         public User User { get; set; }
 
         public List<Receipt> Receipts { get; set; }

@@ -19,9 +19,9 @@ export class ReceiptList extends React.PureComponent<{}, State> {
 
     // tslint:disable-next-line:prefer-conditional-expression
     if (user.userType === DB.UserType.Client)
-      response = await Utils.fetchBackend(`/api/data/receipts?userId=${user.id}`);
+      response = await Utils.fetchBackend(`/api/data/receipts?includePayment=true&userId=${user.id}`);
     else
-      response = await Utils.fetchBackend("/api/data/receipts");
+      response = await Utils.fetchBackend("/api/data/receipts?includePayment=true");
 
     if (!response.ok)
       return;

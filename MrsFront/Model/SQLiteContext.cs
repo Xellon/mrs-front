@@ -92,8 +92,8 @@ namespace MrsFront.Model
                 new RecommendedMovie { RecommendationId = 2, PossibleRating = 9, MovieId = 1 });
 
             modelBuilder.Entity<Receipt>().HasData(
-                new Receipt { Id = 1, RecommendationId = 1, PaymentAmount = 3.0f, PaymentId = 1, ReceiptDate = System.DateTime.Now, ReceiptType = ReceiptType.OneTimeRecommendation },
-                new Receipt { Id = 2, RecommendationId = 2, PaymentAmount = 1.5f, ReceiptDate = System.DateTime.Now + System.TimeSpan.FromHours(1), ReceiptType = ReceiptType.ExtraRecommendation });
+                new Receipt { Id = 1, UserId = 1, RecommendationId = 1, PaymentAmount = 3.0f, PaymentId = 1, ReceiptDate = System.DateTime.Now, ReceiptType = ReceiptType.OneTimeRecommendation },
+                new Receipt { Id = 2, UserId = 4, RecommendationId = 2, PaymentAmount = 1.5f, ReceiptDate = System.DateTime.Now + System.TimeSpan.FromHours(1), ReceiptType = ReceiptType.ExtraRecommendation });
 
             modelBuilder.Entity<Payment>().HasData(
                 new Payment { Id = 1, ReceiptId = 1, PaymentDate = System.DateTime.Now + System.TimeSpan.FromHours(10) });

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace MrsFront.Controllers
 {
@@ -9,9 +10,11 @@ namespace MrsFront.Controllers
     {
 
         [HttpGet("user/membership")]
-        public Model.Membership Membership(int userId)
+        public async Task<Model.Membership> Membership(int userId)
         {
-            return _context.Memberships.FirstOrDefault(m => m.UserId == userId);
+            return await _context.Memberships
+                .Include(m => m.Receipts)
+                .FirstOrDefaultAsync(m => m.UserId == userId);
         }
 
         [HttpGet("user/isMember")]
@@ -22,11 +25,15 @@ namespace MrsFront.Controllers
             return count > 0 ? true : false;
         }
 
-        [HttpPost("user/isMember")]
-        public async Task<IActionResult> AddMembership(int userId)
+        [HttpPost("user/membership")]
+        public async Task<Model.Membership> AddMembership(int userId)
         {
             if (IsUserMember(userId))
-                return BadRequest();
+            {
+                Response.StatusCode = 400;
+                return null;
+            }
+                
 
             var membership = new Model.Membership()
             {
@@ -45,16 +52,26 @@ namespace MrsFront.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok();
+            // Add receipt for membership
+            var receipt = await AddReceipt(userId, membership.Id, Model.ReceiptType.Membership);
+
+            membership.Receipts.Add(receipt);
+            return membership;
         }
 
-        [HttpDelete("user/isMember")]
+        [HttpDelete("user/membership")]
         public async Task<IActionResult> DeleteMembership(int userId)
         {
             if (!IsUserMember(userId))
                 return BadRequest();
 
-            var membership = _context.Memberships.FirstOrDefault(m => m.UserId == userId);
+            var membership = await _context.Memberships.Include(m => m.Receipts).FirstOrDefaultAsync(m => m.UserId == userId);
+
+            foreach (var receipt in membership.Receipts)
+            {
+                _context.Receipts.Attach(receipt);
+                _context.Receipts.Remove(receipt);
+            }
 
             _context.Memberships.Attach(membership);
             _context.Memberships.Remove(membership);

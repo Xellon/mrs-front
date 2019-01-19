@@ -6,7 +6,6 @@ import { withRouter } from "react-router-dom";
 import * as DB from "../../model/DB";
 
 import "./Receipt.scss";
-import { Authentication } from "../../common/Authentication";
 
 // tslint:disable-next-line:no-var-requires
 const printJS = require("print-js");
@@ -44,8 +43,18 @@ export class Receipt extends React.PureComponent<Props, State> {
     });
   }
 
+  private _onPayClick = async () => {
+    const response = await Utils.fetchBackend(`/api/data/receipt/pay?id=${this.props.id}`, { method: "POST" });
+
+    if (!response.ok)
+      return;
+
+    const receipt: DB.Receipt = await response.json();
+    this.setState({ receipt });
+  }
+
   private async getReceipt(): Promise<DB.Receipt> {
-    const response = await Utils.fetchBackend(`/api/data/receipt?id=${this.props.id}`);
+    const response = await Utils.fetchBackend(`/api/data/receipt?id=${this.props.id}&includePayment=true`);
 
     if (!response.ok)
       return;
@@ -72,11 +81,10 @@ export class Receipt extends React.PureComponent<Props, State> {
 
   public renderData(receipt: DB.Receipt) {
     const date = new Date(this.state.receipt.receiptDate).toISOString().slice(0, 10);
-    const signedInUser = Authentication.getSignedInUser();
 
     return (
       <div className="receipt-form-data">
-        <p>User email:</p><p>{signedInUser.email}</p>
+        <p>User email:</p><p>{this.state.receipt.userid}</p>
         <p>Type:</p><p>{this.receiptTypeToString(this.state.receipt.receiptType)}</p>
         <p>Payment amount:</p><p>{this.state.receipt.paymentAmount} €</p>
         <p>Receipt date:</p><p>{date}</p>
@@ -98,6 +106,28 @@ export class Receipt extends React.PureComponent<Props, State> {
           </IconButton>
         </Paper>
 
+        <Paper className="receipt-payment-info">
+          <div className="receipt-payment-info-text">
+            <Typography>
+              Payment status:
+            </Typography>
+            {!this.state.receipt
+              ? <CircularProgress />
+              : this.state.receipt.payment
+                ? <Typography>Paid for</Typography>
+                : <Typography color="secondary">Not paid for</Typography>}
+          </div>
+
+          {this.state.receipt && !this.state.receipt.payment ?
+            <Button
+              style={{ display: "block", margin: "20px auto" }}
+              variant="outlined"
+              color="secondary"
+              onClick={this._onPayClick}
+            >
+              Pay for receipt
+            </Button> : undefined}
+        </Paper>
       </>
     );
   }

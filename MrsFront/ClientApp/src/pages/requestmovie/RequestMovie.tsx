@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Chip, CircularProgress } from "@material-ui/core";
+import { Button, Chip, CircularProgress, Typography } from "@material-ui/core";
 import * as DB from "../../model/DB";
 import { Utils } from "../../common/Utils";
 import "./RequestMovie.scss";
@@ -81,6 +81,15 @@ export class RequestMovie extends React.Component<{}, State> {
   public render() {
     return (
       <main>
+        <Typography
+          style={{
+            margin: "30px auto",
+            textAlign: "center",
+          }}
+          variant="h5"
+        >
+          Select movie genres
+        </Typography>
         <div className="requestmovie-chipcontainer">
           {this.renderTags(this.state)}
         </div>
@@ -96,7 +105,11 @@ export class RequestMovie extends React.Component<{}, State> {
         {this.state.requestStatus === RequestStatus.Pending ? <CircularProgress /> : undefined}
         {this.state.requestStatus === RequestStatus.Error ? "Error generating recommended movies" : undefined}
         {this.state.requestStatus === RequestStatus.Success
-          ? <RecommendedMovies recommendationId={this.state.recommendationId} />
+          ?
+          <>
+            <Typography variant="h5">Generated movies</Typography>
+            <RecommendedMovies recommendationId={this.state.recommendationId} />
+          </>
           : undefined}
       </main>
     );

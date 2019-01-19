@@ -92,7 +92,7 @@ namespace MrsFront.Migrations
                     b.ToTable("Payments");
 
                     b.HasData(
-                        new { Id = 1, PaymentDate = new DateTime(2019, 1, 18, 0, 15, 17, 207, DateTimeKind.Local), ReceiptId = 1 }
+                        new { Id = 1, PaymentDate = new DateTime(2019, 1, 19, 21, 30, 30, 345, DateTimeKind.Local), ReceiptId = 1 }
                     );
                 });
 
@@ -113,15 +113,19 @@ namespace MrsFront.Migrations
 
                     b.Property<int?>("RecommendationId");
 
+                    b.Property<int>("UserId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MembershipId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Receipts");
 
                     b.HasData(
-                        new { Id = 1, PaymentAmount = 3.0, PaymentId = 1, ReceiptDate = new DateTime(2019, 1, 17, 14, 15, 17, 205, DateTimeKind.Local), ReceiptType = 0, RecommendationId = 1 },
-                        new { Id = 2, PaymentAmount = 1.5, ReceiptDate = new DateTime(2019, 1, 17, 15, 15, 17, 207, DateTimeKind.Local), ReceiptType = 2, RecommendationId = 2 }
+                        new { Id = 1, PaymentAmount = 3.0, PaymentId = 1, ReceiptDate = new DateTime(2019, 1, 19, 11, 30, 30, 343, DateTimeKind.Local), ReceiptType = 0, RecommendationId = 1, UserId = 1 },
+                        new { Id = 2, PaymentAmount = 1.5, ReceiptDate = new DateTime(2019, 1, 19, 12, 30, 30, 345, DateTimeKind.Local), ReceiptType = 2, RecommendationId = 2, UserId = 4 }
                     );
                 });
 
@@ -302,6 +306,11 @@ namespace MrsFront.Migrations
                     b.HasOne("MrsFront.Model.Membership", "Membership")
                         .WithMany("Receipts")
                         .HasForeignKey("MembershipId");
+
+                    b.HasOne("MrsFront.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MrsFront.Model.Recommendation", b =>

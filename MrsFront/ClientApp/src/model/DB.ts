@@ -31,6 +31,7 @@ export interface Tag {
 export interface Membership {
   id: number;
   usesLeft: number;
+  receipts?: Receipt[];
 }
 
 export enum ReceiptType {
@@ -41,11 +42,19 @@ export enum ReceiptType {
 
 export interface Receipt {
   id: number;
+  userid: number;
   membershipId?: number;
   recommendationId?: number;
   receiptDate: string;
   paymentAmount: number;
   receiptType: ReceiptType;
+  payment?: Payment;
+}
+
+export interface Payment {
+  id: number;
+  receiptId: number;
+  paymentDate: string;
 }
 
 export interface RecommendedMovie {

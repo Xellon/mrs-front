@@ -106,8 +106,8 @@ export class UserMovies extends React.PureComponent<{}, State> {
           style={{
             margin: "50px auto",
             display: "block",
-            width: "80vw",
-            height: "80px",
+            width: "80%",
+            height: "60px",
           }}
           onClick={this._onClick}
           variant="raised"

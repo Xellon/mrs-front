@@ -2,9 +2,9 @@ import * as React from "react";
 import * as DB from "../../model/DB";
 import { Typography, Divider, Avatar, Button } from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
-import { Client } from "../../common/Client";
 import { withRouter } from "react-router-dom";
 import { Utils } from "../../common/Utils";
+import { Authentication } from "../../common/Authentication";
 
 export function createNavigationButton(text: string, path: string, style?: React.CSSProperties) {
   return withRouter(({ history }) => (
@@ -22,7 +22,8 @@ export function createNavigationButton(text: string, path: string, style?: React
 const ChangeMoviesButton = createNavigationButton("Change movies", "/usermovies");
 const RequestRecommendationButton = createNavigationButton("Request a Recommendation", "/requestmovie");
 const ReceiptsButton = createNavigationButton("Receipts", "/receipts");
-const MembershipButton = createNavigationButton("Become a Member!", "/membership", { background: "gold" });
+const BecomeAMemberButton = createNavigationButton("Become a Member!", "/membership", { background: "gold" });
+const MembershipButton = createNavigationButton("Membership", "/membership");
 
 const MovieListButton = createNavigationButton("Movie List", "/movies");
 const UsersButton = createNavigationButton("Users", "/users");
@@ -32,22 +33,11 @@ interface Props {
 }
 
 interface State {
-  isClientMember: boolean;
+  isClientMember?: boolean;
 }
 
 export class UserNavigation extends React.Component<Props, State> {
-  private _client?: Client;
-
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      isClientMember: false,
-    };
-
-    if (props.user.userType === DB.UserType.Client)
-      this._client = new Client(props.user);
-  }
+  public readonly state: State = {};
 
   private getButtons() {
     switch (this.props.user.userType) {
@@ -57,7 +47,9 @@ export class UserNavigation extends React.Component<Props, State> {
             <ChangeMoviesButton />
             <RequestRecommendationButton />
             <ReceiptsButton />
-            {!this.state.isClientMember ? <MembershipButton /> : undefined}
+            {this.state.isClientMember === undefined
+              ? <MembershipButton />
+              : (this.state.isClientMember ? <MembershipButton /> : <BecomeAMemberButton />)}
           </>);
       case DB.UserType.Admin:
         return (
@@ -75,11 +67,11 @@ export class UserNavigation extends React.Component<Props, State> {
   }
 
   public async componentDidMount() {
-    if (!this._client)
-      return;
+    const user = Authentication.getSignedInUser();
 
-    if (await this._client.getMembership())
-      this.setState({ isClientMember: true });
+    const response = await Utils.fetchBackend(`/api/data/user/isMember?userId=${user.id}`);
+
+    this.setState({ isClientMember: (await response.text()) === "true" });
   }
 
   public render() {
