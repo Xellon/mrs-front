@@ -1,11 +1,12 @@
 import * as React from "react";
-import List from "@material-ui/core/List";
+// import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Avatar from "@material-ui/core/Avatar";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Paper, ListItemText, IconButton, Divider } from "@material-ui/core";
 import * as DB from "../../model/DB";
 import { Utils } from "../../common/Utils";
+import { List as VirtualizedList, ListRowProps } from "react-virtualized";
 
 interface State {
   movies?: DB.Movie[];
@@ -13,6 +14,7 @@ interface State {
 
 export class Movies extends React.Component<{}, State> {
   public readonly state: State = {};
+  private _mainRef = React.createRef<HTMLMainElement>();
 
   public async componentDidMount() {
     const response = await Utils.fetchBackend("/api/data/movies");
@@ -24,40 +26,48 @@ export class Movies extends React.Component<{}, State> {
     this.setState({ movies });
   }
 
-  private createListItems(state: State) {
-    const list: React.ReactNode[] = [];
-
-    if (!state.movies)
-      return undefined;
-
-    for (let i = 0; i < state.movies.length; i++) {
-      list.push(
-        <>
-          <ListItem key={`item_${state.movies[i].id}`}>
-            <ListItemText secondary={state.movies[i].title}>
-              Title
+  public _renderMovie = (props: ListRowProps) => {
+    const movie = this.state.movies[props.index];
+    return (
+      <div key={props.key} style={{ ...props.style, background: "white" }}>
+        <ListItem>
+          <ListItemText secondary={movie.title}>
+            Title
             </ListItemText>
-            <ListItemText secondary={state.movies[i].averageRating}>
-              Rating
+          <ListItemText style={{ flexGrow: 0 }} secondary={movie.averageRating}>
+            Rating
             </ListItemText>
-            <Avatar src={state.movies[i].imageUrl} />
-            <IconButton style={{ marginLeft: 30 }}>
-              <DeleteIcon />
-            </IconButton>
-          </ListItem>
-          {i < 29 ? <Divider /> : undefined}
-        </>);
-    }
-    return list;
+          <Avatar src={movie.imageUrl} />
+          <IconButton style={{ marginLeft: 30 }}>
+            <DeleteIcon />
+          </IconButton>
+        </ListItem>
+        <Divider />
+      </div>
+    );
   }
 
   public render() {
+    let dimensions: { width: number, height: number } | undefined;
+
+    if (this._mainRef.current) {
+      const box = this._mainRef.current.getBoundingClientRect();
+      dimensions = { width: box.width, height: box.height };
+    }
+
+    // const items = this.createListItems(this.state);
+
     return (
-      <main>
+      <main ref={this._mainRef}>
         <Paper>
-          <List>
-            {this.createListItems(this.state)}
-          </List>
+          {dimensions && this.state.movies ?
+            <VirtualizedList
+              rowRenderer={this._renderMovie}
+              rowHeight={71}
+              rowCount={this.state.movies.length}
+              {...dimensions}
+            />
+            : undefined}
         </Paper>
       </main>
     );
