@@ -19,6 +19,7 @@ import { UserMovies } from "./pages/usermovies/UserMovies";
 import { Membership } from "./pages/membership/Membership";
 import { Props } from "./pages/register/MainInfo";
 import { lime, pink } from "@material-ui/core/colors";
+import { Users } from "./pages/users/Users";
 
 // function errorPage() {
 //   return (
@@ -84,6 +85,7 @@ export default class App extends React.Component<{}, State> {
         routes = (
           <>
             <Route path="/movies" component={Movies} />
+            <Route path="/users" component={Users} />
             {routes}
           </>);
         break;

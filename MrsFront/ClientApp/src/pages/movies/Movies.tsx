@@ -12,7 +12,7 @@ interface State {
   movies?: DB.Movie[];
 }
 
-export class Movies extends React.Component<{}, State> {
+export class Movies extends React.PureComponent<{}, State> {
   public readonly state: State = {};
   private _mainRef = React.createRef<HTMLMainElement>();
 
