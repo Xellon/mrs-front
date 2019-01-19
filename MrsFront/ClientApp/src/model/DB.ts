@@ -42,7 +42,7 @@ export enum ReceiptType {
 
 export interface Receipt {
   id: number;
-  userid: number;
+  userId: number;
   membershipId?: number;
   recommendationId?: number;
   receiptDate: string;

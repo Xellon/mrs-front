@@ -30,6 +30,7 @@ interface Props {
 
 interface State {
   receipt?: DB.Receipt;
+  user?: DB.User;
 }
 
 export class Receipt extends React.PureComponent<Props, State> {
@@ -53,8 +54,17 @@ export class Receipt extends React.PureComponent<Props, State> {
     this.setState({ receipt });
   }
 
-  private async getReceipt(): Promise<DB.Receipt> {
-    const response = await Utils.fetchBackend(`/api/data/receipt?id=${this.props.id}&includePayment=true`);
+  private async getReceipt(id: number): Promise<DB.Receipt> {
+    const response = await Utils.fetchBackend(`/api/data/receipt?id=${id}&includePayment=true`);
+
+    if (!response.ok)
+      return;
+
+    return response.json();
+  }
+
+  private async getUser(id: number): Promise<DB.User> {
+    const response = await Utils.fetchBackend(`/api/data/user?userId=${id}`);
 
     if (!response.ok)
       return;
@@ -74,19 +84,21 @@ export class Receipt extends React.PureComponent<Props, State> {
   }
 
   public async componentDidMount() {
-    const receipt = await this.getReceipt();
+    const receipt = await this.getReceipt(this.props.id);
 
-    this.setState({ receipt });
+    const user = await this.getUser(receipt.userId);
+
+    this.setState({ receipt, user });
   }
 
-  public renderData(receipt: DB.Receipt) {
-    const date = new Date(this.state.receipt.receiptDate).toISOString().slice(0, 10);
+  public renderData(receipt: DB.Receipt, user: DB.User) {
+    const date = new Date(receipt.receiptDate).toISOString().slice(0, 10);
 
     return (
       <div className="receipt-form-data">
-        <p>User email:</p><p>{this.state.receipt.userid}</p>
-        <p>Type:</p><p>{this.receiptTypeToString(this.state.receipt.receiptType)}</p>
-        <p>Payment amount:</p><p>{this.state.receipt.paymentAmount} €</p>
+        <p>User email:</p><p>{user.email}</p>
+        <p>Type:</p><p>{this.receiptTypeToString(receipt.receiptType)}</p>
+        <p>Payment amount:</p><p>{receipt.paymentAmount} €</p>
         <p>Receipt date:</p><p>{date}</p>
       </div>
     );
@@ -99,7 +111,9 @@ export class Receipt extends React.PureComponent<Props, State> {
         <Paper>
           <div id="receipt-form">
             <Typography>Receipt No. {this.props.id}</Typography>
-            {this.state.receipt ? this.renderData(this.state.receipt) : <CircularProgress />}
+            {this.state.receipt && this.state.user
+              ? this.renderData(this.state.receipt, this.state.user)
+              : <CircularProgress />}
           </div>
           <IconButton onClick={this.onPrintClick}>
             <PrintIcon />
