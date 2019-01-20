@@ -5,8 +5,6 @@
   "dependencies": {
     "@material-ui/core": "^3.3.2",
     "@material-ui/icons": "^3.0.1",
-    "@types/lodash": "^4.14.119",
-    "@types/react-virtualized": "^9.18.12",
     "downshift": "^3.1.5",
     "lodash": "^4.17.11",
     "print-js": "^1.0.54",
@@ -19,6 +17,8 @@
     "@types/react": "^16.4.18",
     "@types/react-dom": "^16.0.9",
     "@types/react-router-dom": "^4.3.1",
+    "@types/lodash": "^4.14.119",
+    "@types/react-virtualized": "^9.18.12",
     "awesome-typescript-loader": "^5.2.1",
     "css-loader": "^1.0.0",
     "html-webpack-plugin": "^3.2.0",
@@ -30,13 +30,15 @@
     "tslint": "^5.11.0",
     "tslint-react": "^3.6.0",
     "typescript": "^3.1.3",
+    "uglifyjs-webpack-plugin": "^2.1.1",
     "webpack": "^4.23.1",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.14"
+    "webpack-dev-server": "^3.1.14",
+    "webpack-merge": "^4.2.1"
   },
   "scripts": {
-    "start": "webpack-dev-server --port 3000",
-    "build": "rimraf ./build && webpack",
+    "start": "webpack-dev-server --port 3000 --config webpack.dev.js",
+    "build": "rimraf ./build && webpack --config webpack.prod.js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "tslint src/**/*.ts*"
