@@ -100,7 +100,7 @@ export class UserMovies extends React.PureComponent<{}, State> {
   public render() {
     return (
       <main>
-        <Typography variant="headline">User movies</Typography>
+        <Typography variant="h5">User movies</Typography>
         <Movies onSubmit={this._onSave} submitEvent={this._saveEvent} userMovies={this.state.userMovies} />
         <Button
           style={{
@@ -110,7 +110,7 @@ export class UserMovies extends React.PureComponent<{}, State> {
             height: "60px",
           }}
           onClick={this._onClick}
-          variant="raised"
+          variant="contained"
           color="primary"
         >
           <Typography color="textPrimary">Save</Typography>

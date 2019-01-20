@@ -95,7 +95,7 @@ export class RequestMovie extends React.Component<{}, State> {
         </div>
         <Button
           className="requestmovie-generatebutton"
-          variant="raised"
+          variant="contained"
           color="primary"
           onClick={this._onClickGenerateRecommendations}
           disabled={this.state.requestStatus === RequestStatus.Pending}

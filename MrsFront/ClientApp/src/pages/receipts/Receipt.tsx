@@ -24,6 +24,8 @@ const BackButton = withRouter(({ history }) => (
   </Button>
 ));
 
+const boldedStyle: React.CSSProperties = { fontWeight: "bold" };
+
 interface Props {
   id: number;
 }
@@ -92,16 +94,27 @@ export class Receipt extends React.PureComponent<Props, State> {
   }
 
   public renderData(receipt: DB.Receipt, user: DB.User) {
-    const date = new Date(receipt.receiptDate).toISOString().slice(0, 10);
-
     return (
       <div className="receipt-form-data">
-        <p>User email:</p><p>{user.email}</p>
-        <p>Type:</p><p>{this.receiptTypeToString(receipt.receiptType)}</p>
-        <p>Payment amount:</p><p>{receipt.paymentAmount} €</p>
-        <p>Receipt date:</p><p>{date}</p>
+        <Typography style={boldedStyle}>User email:</Typography>
+        <Typography>{user.email}</Typography>
+
+        <Typography style={boldedStyle}>Type:</Typography>
+        <Typography>{this.receiptTypeToString(receipt.receiptType)}</Typography>
+
+        <Typography style={boldedStyle}>Payment amount:</Typography>
+        <Typography>{receipt.paymentAmount} €</Typography>
+
+        <Typography style={boldedStyle}>Receipt date:</Typography>
+        <Typography>{this.convertDate(receipt.receiptDate)}</Typography>
       </div>
     );
+  }
+
+  private convertDate(dateString: string): string {
+    const date = new Date(dateString);
+
+    return `${date.toISOString().slice(0, 10)} ${date.getHours()}:${date.getMinutes()}`;
   }
 
   public render() {
@@ -110,7 +123,7 @@ export class Receipt extends React.PureComponent<Props, State> {
         <BackButton />
         <Paper>
           <div id="receipt-form">
-            <Typography>Receipt No. {this.props.id}</Typography>
+            <Typography variant="h6">Receipt No. {this.props.id}</Typography>
             {this.state.receipt && this.state.user
               ? this.renderData(this.state.receipt, this.state.user)
               : <CircularProgress />}
@@ -122,14 +135,18 @@ export class Receipt extends React.PureComponent<Props, State> {
 
         <Paper className="receipt-payment-info">
           <div className="receipt-payment-info-text">
-            <Typography>
-              Payment status:
-            </Typography>
+            <Typography style={boldedStyle}>Payment status:</Typography>
             {!this.state.receipt
               ? <CircularProgress />
               : this.state.receipt.payment
                 ? <Typography>Paid for</Typography>
                 : <Typography color="secondary">Not paid for</Typography>}
+            {this.state.receipt && this.state.receipt.payment ?
+              <>
+                <Typography style={boldedStyle}>Payment date</Typography>
+                <Typography>{this.convertDate(this.state.receipt.payment.paymentDate)}</Typography>
+              </>
+              : undefined}
           </div>
 
           {this.state.receipt && !this.state.receipt.payment ?

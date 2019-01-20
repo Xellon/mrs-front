@@ -55,7 +55,7 @@ export default class Autocomplete extends React.PureComponent<Props> {
               .map((item, index) => (
                 <li
                   {...controllerState.getItemProps({
-                    key: item.value,
+                    key: item.index,
                     index,
                     item,
                     style: {

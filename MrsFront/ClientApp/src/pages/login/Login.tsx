@@ -6,7 +6,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { Authentication } from "../../common/Authentication";
-import { Snackbar, SnackbarContent } from "@material-ui/core";
+import { Snackbar, SnackbarContent, FormControlLabel, Checkbox, TextField } from "@material-ui/core";
 import { RouteComponentProps } from "react-router-dom";
 
 import "./Login.scss";
@@ -15,12 +15,14 @@ interface State {
   email: string;
   password: string;
   error?: string;
+  showForgotPassword: boolean;
 }
 
 export default class Login extends React.Component<RouteComponentProps, State> {
   public readonly state: State = {
     email: "",
     password: "",
+    showForgotPassword: false,
   };
 
   public _onSubmit = async (e: React.FormEvent) => {
@@ -41,6 +43,10 @@ export default class Login extends React.Component<RouteComponentProps, State> {
 
   public _onPasswordChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ password: e.target.value, error: undefined });
+  }
+
+  private _onClickForgotPassword = () => {
+    this.setState(prevState => ({ showForgotPassword: !prevState.showForgotPassword }));
   }
 
   public render() {
@@ -80,6 +86,7 @@ export default class Login extends React.Component<RouteComponentProps, State> {
               />
             </FormControl>
             <Button
+              style={{ marginTop: 30 }}
               type="submit"
               fullWidth
               variant="contained"
@@ -88,10 +95,33 @@ export default class Login extends React.Component<RouteComponentProps, State> {
             >
               Login
             </Button>
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button style={{ display: "block" }} onClick={this._onClickForgotPassword}>
+              <Typography>Forgot password?</Typography>
+            </Button>
+            {this.state.showForgotPassword ?
+              <div
+                style={{
+                  border: "solid 1px #DDD",
+                  borderRadius: 5,
+                  padding: 10,
+                  marginTop: 10,
+                }}
+              >
+                <Typography>Write your email address:</Typography>
+                <TextField style={{ width: "50%", marginRight: 20 }} />
+                <Button variant="outlined">
+                  Send
+                </Button>
+              </div>
+              : undefined}
           </form>
         </Paper>
         <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
           open={!!this.state.error}
           autoHideDuration={2000}
         >

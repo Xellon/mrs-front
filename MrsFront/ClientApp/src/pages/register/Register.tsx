@@ -69,7 +69,7 @@ export class Register extends React.Component<{}, State> {
   public render() {
     return (
       <main style={{ width: 600, margin: "0 auto" }}>
-        <Typography variant="headline" style={{ paddingBottom: 10 }} align="center">Register</Typography>
+        <Typography variant="h5" style={{ paddingBottom: 10 }} align="center">Register</Typography>
         <Paper style={{ padding: 10 }} >
           <Typography variant="h6">Main info</Typography>
           <MainInfo
@@ -90,7 +90,7 @@ export class Register extends React.Component<{}, State> {
           open={!!this.state.submitError}
           autoHideDuration={3000}
           message={this.state.submitError}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
           <SnackbarContent
             message={this.state.submitError}
