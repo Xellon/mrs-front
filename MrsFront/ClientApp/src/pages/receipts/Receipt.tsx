@@ -79,7 +79,7 @@ export class Receipt extends React.PureComponent<Props, State> {
       case DB.ReceiptType.Membership:
         return "Payment for membership";
       case DB.ReceiptType.ExtraRecommendation:
-        return "Payment from extra membership recommendation";
+        return "Payment for extra membership recommendation";
       case DB.ReceiptType.OneTimeRecommendation:
         return "Regular payment for recommendation";
     }

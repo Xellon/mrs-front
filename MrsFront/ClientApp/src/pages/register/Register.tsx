@@ -5,6 +5,7 @@ import { CustomEvent } from "../../common/CustomEvent";
 import { Utils } from "../../common/Utils";
 import { UserMovies } from "../../components/usermovies/Movies";
 import * as Model from "../../model/Model";
+import { RouteComponentProps } from "react-router-dom";
 
 export interface State {
   submitError?: string;
@@ -15,7 +16,7 @@ interface RegisterForm {
   movies: Model.UserMovie[];
 }
 
-export class Register extends React.Component<{}, State> {
+export class Register extends React.Component<RouteComponentProps, State> {
   public readonly state: State = {};
   private _submitEvent = new CustomEvent();
 
@@ -36,6 +37,8 @@ export class Register extends React.Component<{}, State> {
     this._form.movies = movies;
   }
 
+  private _onCloseSnackbar = () => this.setState({ submitError: undefined });
+
   private _onClick = async () => {
     // Reset form
     this._form = this._defaultForm;
@@ -55,8 +58,10 @@ export class Register extends React.Component<{}, State> {
           }),
         });
 
-      if (response.ok)
+      if (response.ok) {
+        this.props.history.push("/login");
         return;
+      }
 
       const errorText = await response.text();
       this.setState({ submitError: errorText });
@@ -89,6 +94,7 @@ export class Register extends React.Component<{}, State> {
         <Snackbar
           open={!!this.state.submitError}
           autoHideDuration={3000}
+          onClose={this._onCloseSnackbar}
           message={this.state.submitError}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >

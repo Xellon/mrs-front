@@ -77,7 +77,7 @@ export default class Autocomplete extends React.PureComponent<Props> {
   private renderTextField = (controllerState: ControllerStateAndHelpers<AutocompleteItem>) => {
     return (
       <div>
-        <TextField {...{ ...controllerState.getInputProps(), ...this.props.textFieldProps }} />
+        <TextField {...controllerState.getInputProps(this.props.textFieldProps)} />
         {controllerState.isOpen ? this.renderSuggestions(controllerState) : undefined}
       </div>
     );

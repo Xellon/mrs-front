@@ -49,6 +49,8 @@ export default class Login extends React.Component<RouteComponentProps, State> {
     this.setState(prevState => ({ showForgotPassword: !prevState.showForgotPassword }));
   }
 
+  private _onCloseSnackbar = () => this.setState({ error: undefined });
+
   public render() {
     return (
       <main>
@@ -123,7 +125,8 @@ export default class Login extends React.Component<RouteComponentProps, State> {
         <Snackbar
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
           open={!!this.state.error}
-          autoHideDuration={2000}
+          autoHideDuration={3000}
+          onClose={this._onCloseSnackbar}
         >
           <SnackbarContent
             message={this.state.error}
